@@ -4,154 +4,211 @@
 <title>Mi Biblia</title>
 <link rel="stylesheet" href="fonts.css">
 <style>
-:root{--bg:#fff;--bar:#fff;--line:#e3e0d8;--fg:#222;--mut:#777;--paper:#fffdf8;--ink:#2a2a2a;--red:#a02424;--field:#f4f2ec;--acc:#2f5d8a;--font:'EB Garamond',Georgia,serif;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-:root[data-theme=dark]{--bg:#121212;--bar:#181818;--line:#2c2c2c;--fg:#e8e6e1;--mut:#9a9a9a;--paper:#1d1d1d;--ink:#e4dfd3;--red:#e07a6f;--field:#242424;--acc:#5b93c4;color-scheme:dark}
-html{scroll-padding-top:env(safe-area-inset-top,0px)}
-html,body{height:100%;margin:0;background:var(--bg);color:var(--fg);font:14px system-ui,sans-serif;overflow:hidden}
-body{display:flex;flex-direction:column}
-#top{background:var(--bar);border-bottom:1px solid var(--line);padding:6px;display:flex;flex-direction:column;gap:6px;position:relative;z-index:5}
-.fl{display:flex;gap:6px;align-items:center}
-.row{display:flex;gap:6px}
-#q,select,button{height:40px;box-sizing:border-box;border-radius:10px;border:1px solid var(--line);background:var(--field);color:var(--fg);font-size:14px;padding:0 10px;min-width:0}
-#q{flex:1;font-size:16px;padding:0 12px}
-.row select{flex:1}
-button{cursor:pointer;flex:1}
-button.pri{background:var(--acc);border-color:var(--acc);color:#fff}
-.sm{flex:0 0 44px;padding:0}
-#res{position:absolute;left:6px;right:6px;top:100%;max-height:60vh;overflow:auto;background:var(--paper);color:var(--ink);border:1px solid var(--line);border-radius:10px;display:none;box-shadow:0 10px 30px #0003}
-#res div{padding:10px 12px;border-bottom:1px solid var(--line);cursor:pointer;font-family:var(--font);font-size:16px}
+/**
+ * Swiper 11.1.14
+ * Most modern mobile touch slider and framework with hardware accelerated transitions
+ * https://swiperjs.com
+ *
+ * Copyright 2014-2024 Vladimir Kharlampidi
+ *
+ * Released under the MIT License
+ *
+ * Released on: September 12, 2024
+ */
+
+@font-face{font-family:swiper-icons;src:url('data:application/font-woff;charset=utf-8;base64, d09GRgABAAAAAAZgABAAAAAADAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABGRlRNAAAGRAAAABoAAAAci6qHkUdERUYAAAWgAAAAIwAAACQAYABXR1BPUwAABhQAAAAuAAAANuAY7+xHU1VCAAAFxAAAAFAAAABm2fPczU9TLzIAAAHcAAAASgAAAGBP9V5RY21hcAAAAkQAAACIAAABYt6F0cBjdnQgAAACzAAAAAQAAAAEABEBRGdhc3AAAAWYAAAACAAAAAj//wADZ2x5ZgAAAywAAADMAAAD2MHtryVoZWFkAAABbAAAADAAAAA2E2+eoWhoZWEAAAGcAAAAHwAAACQC9gDzaG10eAAAAigAAAAZAAAArgJkABFsb2NhAAAC0AAAAFoAAABaFQAUGG1heHAAAAG8AAAAHwAAACAAcABAbmFtZQAAA/gAAAE5AAACXvFdBwlwb3N0AAAFNAAAAGIAAACE5s74hXjaY2BkYGAAYpf5Hu/j+W2+MnAzMYDAzaX6QjD6/4//Bxj5GA8AuRwMYGkAPywL13jaY2BkYGA88P8Agx4j+/8fQDYfA1AEBWgDAIB2BOoAeNpjYGRgYNBh4GdgYgABEMnIABJzYNADCQAACWgAsQB42mNgYfzCOIGBlYGB0YcxjYGBwR1Kf2WQZGhhYGBiYGVmgAFGBiQQkOaawtDAoMBQxXjg/wEGPcYDDA4wNUA2CCgwsAAAO4EL6gAAeNpj2M0gyAACqxgGNWBkZ2D4/wMA+xkDdgAAAHjaY2BgYGaAYBkGRgYQiAHyGMF8FgYHIM3DwMHABGQrMOgyWDLEM1T9/w8UBfEMgLzE////P/5//f/V/xv+r4eaAAeMbAxwIUYmIMHEgKYAYjUcsDAwsLKxc3BycfPw8jEQA/gZBASFhEVExcQlJKWkZWTl5BUUlZRVVNXUNTQZBgMAAMR+E+gAEQFEAAAAKgAqACoANAA+AEgAUgBcAGYAcAB6AIQAjgCYAKIArAC2AMAAygDUAN4A6ADyAPwBBgEQARoBJAEuATgBQgFMAVYBYAFqAXQBfgGIAZIBnAGmAbIBzgHsAAB42u2NMQ6CUAyGW568x9AneYYgm4MJbhKFaExIOAVX8ApewSt4Bic4AfeAid3VOBixDxfPYEza5O+Xfi04YADggiUIULCuEJK8VhO4bSvpdnktHI5QCYtdi2sl8ZnXaHlqUrNKzdKcT8cjlq+rwZSvIVczNiezsfnP/uznmfPFBNODM2K7MTQ45YEAZqGP81AmGGcF3iPqOop0r1SPTaTbVkfUe4HXj97wYE+yNwWYxwWu4v1ugWHgo3S1XdZEVqWM7ET0cfnLGxWfkgR42o2PvWrDMBSFj/IHLaF0zKjRgdiVMwScNRAoWUoH78Y2icB/yIY09An6AH2Bdu/UB+yxopYshQiEvnvu0dURgDt8QeC8PDw7Fpji3fEA4z/PEJ6YOB5hKh4dj3EvXhxPqH/SKUY3rJ7srZ4FZnh1PMAtPhwP6fl2PMJMPDgeQ4rY8YT6Gzao0eAEA409DuggmTnFnOcSCiEiLMgxCiTI6Cq5DZUd3Qmp10vO0LaLTd2cjN4fOumlc7lUYbSQcZFkutRG7g6JKZKy0RmdLY680CDnEJ+UMkpFFe1RN7nxdVpXrC4aTtnaurOnYercZg2YVmLN/d/gczfEimrE/fs/bOuq29Zmn8tloORaXgZgGa78yO9/cnXm2BpaGvq25Dv9S4E9+5SIc9PqupJKhYFSSl47+Qcr1mYNAAAAeNptw0cKwkAAAMDZJA8Q7OUJvkLsPfZ6zFVERPy8qHh2YER+3i/BP83vIBLLySsoKimrqKqpa2hp6+jq6RsYGhmbmJqZSy0sraxtbO3sHRydnEMU4uR6yx7JJXveP7WrDycAAAAAAAH//wACeNpjYGRgYOABYhkgZgJCZgZNBkYGLQZtIJsFLMYAAAw3ALgAeNolizEKgDAQBCchRbC2sFER0YD6qVQiBCv/H9ezGI6Z5XBAw8CBK/m5iQQVauVbXLnOrMZv2oLdKFa8Pjuru2hJzGabmOSLzNMzvutpB3N42mNgZGBg4GKQYzBhYMxJLMlj4GBgAYow/P/PAJJhLM6sSoWKfWCAAwDAjgbRAAB42mNgYGBkAIIbCZo5IPrmUn0hGA0AO8EFTQAA');font-weight:400;font-style:normal}:root{--swiper-theme-color:#007aff}:host{position:relative;display:block;margin-left:auto;margin-right:auto;z-index:1}.swiper{margin-left:auto;margin-right:auto;position:relative;overflow:hidden;list-style:none;padding:0;z-index:1;display:block}.swiper-vertical>.swiper-wrapper{flex-direction:column}.swiper-wrapper{position:relative;width:100%;height:100%;z-index:1;display:flex;transition-property:transform;transition-timing-function:var(--swiper-wrapper-transition-timing-function,initial);box-sizing:content-box}.swiper-android .swiper-slide,.swiper-ios .swiper-slide,.swiper-wrapper{transform:translate3d(0px,0,0)}.swiper-horizontal{touch-action:pan-y}.swiper-vertical{touch-action:pan-x}.swiper-slide{flex-shrink:0;width:100%;height:100%;position:relative;transition-property:transform;display:block}.swiper-slide-invisible-blank{visibility:hidden}.swiper-autoheight,.swiper-autoheight .swiper-slide{height:auto}.swiper-autoheight .swiper-wrapper{align-items:flex-start;transition-property:transform,height}.swiper-backface-hidden .swiper-slide{transform:translateZ(0);-webkit-backface-visibility:hidden;backface-visibility:hidden}.swiper-3d.swiper-css-mode .swiper-wrapper{perspective:1200px}.swiper-3d .swiper-wrapper{transform-style:preserve-3d}.swiper-3d{perspective:1200px}.swiper-3d .swiper-cube-shadow,.swiper-3d .swiper-slide{transform-style:preserve-3d}.swiper-css-mode>.swiper-wrapper{overflow:auto;scrollbar-width:none;-ms-overflow-style:none}.swiper-css-mode>.swiper-wrapper::-webkit-scrollbar{display:none}.swiper-css-mode>.swiper-wrapper>.swiper-slide{scroll-snap-align:start start}.swiper-css-mode.swiper-horizontal>.swiper-wrapper{scroll-snap-type:x mandatory}.swiper-css-mode.swiper-vertical>.swiper-wrapper{scroll-snap-type:y mandatory}.swiper-css-mode.swiper-free-mode>.swiper-wrapper{scroll-snap-type:none}.swiper-css-mode.swiper-free-mode>.swiper-wrapper>.swiper-slide{scroll-snap-align:none}.swiper-css-mode.swiper-centered>.swiper-wrapper::before{content:'';flex-shrink:0;order:9999}.swiper-css-mode.swiper-centered>.swiper-wrapper>.swiper-slide{scroll-snap-align:center center;scroll-snap-stop:always}.swiper-css-mode.swiper-centered.swiper-horizontal>.swiper-wrapper>.swiper-slide:first-child{margin-inline-start:var(--swiper-centered-offset-before)}.swiper-css-mode.swiper-centered.swiper-horizontal>.swiper-wrapper::before{height:100%;min-height:1px;width:var(--swiper-centered-offset-after)}.swiper-css-mode.swiper-centered.swiper-vertical>.swiper-wrapper>.swiper-slide:first-child{margin-block-start:var(--swiper-centered-offset-before)}.swiper-css-mode.swiper-centered.swiper-vertical>.swiper-wrapper::before{width:100%;min-width:1px;height:var(--swiper-centered-offset-after)}.swiper-3d .swiper-slide-shadow,.swiper-3d .swiper-slide-shadow-bottom,.swiper-3d .swiper-slide-shadow-left,.swiper-3d .swiper-slide-shadow-right,.swiper-3d .swiper-slide-shadow-top{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:10}.swiper-3d .swiper-slide-shadow{background:rgba(0,0,0,.15)}.swiper-3d .swiper-slide-shadow-left{background-image:linear-gradient(to left,rgba(0,0,0,.5),rgba(0,0,0,0))}.swiper-3d .swiper-slide-shadow-right{background-image:linear-gradient(to right,rgba(0,0,0,.5),rgba(0,0,0,0))}.swiper-3d .swiper-slide-shadow-top{background-image:linear-gradient(to top,rgba(0,0,0,.5),rgba(0,0,0,0))}.swiper-3d .swiper-slide-shadow-bottom{background-image:linear-gradient(to bottom,rgba(0,0,0,.5),rgba(0,0,0,0))}.swiper-lazy-preloader{width:42px;height:42px;position:absolute;left:50%;top:50%;margin-left:-21px;margin-top:-21px;z-index:10;transform-origin:50%;box-sizing:border-box;border:4px solid var(--swiper-preloader-color,var(--swiper-theme-color));border-radius:50%;border-top-color:transparent}.swiper-watch-progress .swiper-slide-visible .swiper-lazy-preloader,.swiper:not(.swiper-watch-progress) .swiper-lazy-preloader{animation:swiper-preloader-spin 1s infinite linear}.swiper-lazy-preloader-white{--swiper-preloader-color:#fff}.swiper-lazy-preloader-black{--swiper-preloader-color:#000}@keyframes swiper-preloader-spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}.swiper-virtual .swiper-slide{-webkit-backface-visibility:hidden;transform:translateZ(0)}.swiper-virtual.swiper-css-mode .swiper-wrapper::after{content:'';position:absolute;left:0;top:0;pointer-events:none}.swiper-virtual.swiper-css-mode.swiper-horizontal .swiper-wrapper::after{height:1px;width:var(--swiper-virtual-size)}.swiper-virtual.swiper-css-mode.swiper-vertical .swiper-wrapper::after{width:1px;height:var(--swiper-virtual-size)}:root{--swiper-navigation-size:44px}.swiper-button-next,.swiper-button-prev{position:absolute;top:var(--swiper-navigation-top-offset,50%);width:calc(var(--swiper-navigation-size)/ 44 * 27);height:var(--swiper-navigation-size);margin-top:calc(0px - (var(--swiper-navigation-size)/ 2));z-index:10;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--swiper-navigation-color,var(--swiper-theme-color))}.swiper-button-next.swiper-button-disabled,.swiper-button-prev.swiper-button-disabled{opacity:.35;cursor:auto;pointer-events:none}.swiper-button-next.swiper-button-hidden,.swiper-button-prev.swiper-button-hidden{opacity:0;cursor:auto;pointer-events:none}.swiper-navigation-disabled .swiper-button-next,.swiper-navigation-disabled .swiper-button-prev{display:none!important}.swiper-button-next svg,.swiper-button-prev svg{width:100%;height:100%;object-fit:contain;transform-origin:center}.swiper-rtl .swiper-button-next svg,.swiper-rtl .swiper-button-prev svg{transform:rotate(180deg)}.swiper-button-prev,.swiper-rtl .swiper-button-next{left:var(--swiper-navigation-sides-offset,10px);right:auto}.swiper-button-next,.swiper-rtl .swiper-button-prev{right:var(--swiper-navigation-sides-offset,10px);left:auto}.swiper-button-lock{display:none}.swiper-button-next:after,.swiper-button-prev:after{font-family:swiper-icons;font-size:var(--swiper-navigation-size);text-transform:none!important;letter-spacing:0;font-variant:initial;line-height:1}.swiper-button-prev:after,.swiper-rtl .swiper-button-next:after{content:'prev'}.swiper-button-next,.swiper-rtl .swiper-button-prev{right:var(--swiper-navigation-sides-offset,10px);left:auto}.swiper-button-next:after,.swiper-rtl .swiper-button-prev:after{content:'next'}.swiper-pagination{position:absolute;text-align:center;transition:.3s opacity;transform:translate3d(0,0,0);z-index:10}.swiper-pagination.swiper-pagination-hidden{opacity:0}.swiper-pagination-disabled>.swiper-pagination,.swiper-pagination.swiper-pagination-disabled{display:none!important}.swiper-horizontal>.swiper-pagination-bullets,.swiper-pagination-bullets.swiper-pagination-horizontal,.swiper-pagination-custom,.swiper-pagination-fraction{bottom:var(--swiper-pagination-bottom,8px);top:var(--swiper-pagination-top,auto);left:0;width:100%}.swiper-pagination-bullets-dynamic{overflow:hidden;font-size:0}.swiper-pagination-bullets-dynamic .swiper-pagination-bullet{transform:scale(.33);position:relative}.swiper-pagination-bullets-dynamic .swiper-pagination-bullet-active{transform:scale(1)}.swiper-pagination-bullets-dynamic .swiper-pagination-bullet-active-main{transform:scale(1)}.swiper-pagination-bullets-dynamic .swiper-pagination-bullet-active-prev{transform:scale(.66)}.swiper-pagination-bullets-dynamic .swiper-pagination-bullet-active-prev-prev{transform:scale(.33)}.swiper-pagination-bullets-dynamic .swiper-pagination-bullet-active-next{transform:scale(.66)}.swiper-pagination-bullets-dynamic .swiper-pagination-bullet-active-next-next{transform:scale(.33)}.swiper-pagination-bullet{width:var(--swiper-pagination-bullet-width,var(--swiper-pagination-bullet-size,8px));height:var(--swiper-pagination-bullet-height,var(--swiper-pagination-bullet-size,8px));display:inline-block;border-radius:var(--swiper-pagination-bullet-border-radius,50%);background:var(--swiper-pagination-bullet-inactive-color,#000);opacity:var(--swiper-pagination-bullet-inactive-opacity, .2)}button.swiper-pagination-bullet{border:none;margin:0;padding:0;box-shadow:none;-webkit-appearance:none;appearance:none}.swiper-pagination-clickable .swiper-pagination-bullet{cursor:pointer}.swiper-pagination-bullet:only-child{display:none!important}.swiper-pagination-bullet-active{opacity:var(--swiper-pagination-bullet-opacity, 1);background:var(--swiper-pagination-color,var(--swiper-theme-color))}.swiper-pagination-vertical.swiper-pagination-bullets,.swiper-vertical>.swiper-pagination-bullets{right:var(--swiper-pagination-right,8px);left:var(--swiper-pagination-left,auto);top:50%;transform:translate3d(0px,-50%,0)}.swiper-pagination-vertical.swiper-pagination-bullets .swiper-pagination-bullet,.swiper-vertical>.swiper-pagination-bullets .swiper-pagination-bullet{margin:var(--swiper-pagination-bullet-vertical-gap,6px) 0;display:block}.swiper-pagination-vertical.swiper-pagination-bullets.swiper-pagination-bullets-dynamic,.swiper-vertical>.swiper-pagination-bullets.swiper-pagination-bullets-dynamic{top:50%;transform:translateY(-50%);width:8px}.swiper-pagination-vertical.swiper-pagination-bullets.swiper-pagination-bullets-dynamic .swiper-pagination-bullet,.swiper-vertical>.swiper-pagination-bullets.swiper-pagination-bullets-dynamic .swiper-pagination-bullet{display:inline-block;transition:.2s transform,.2s top}.swiper-horizontal>.swiper-pagination-bullets .swiper-pagination-bullet,.swiper-pagination-horizontal.swiper-pagination-bullets .swiper-pagination-bullet{margin:0 var(--swiper-pagination-bullet-horizontal-gap,4px)}.swiper-horizontal>.swiper-pagination-bullets.swiper-pagination-bullets-dynamic,.swiper-pagination-horizontal.swiper-pagination-bullets.swiper-pagination-bullets-dynamic{left:50%;transform:translateX(-50%);white-space:nowrap}.swiper-horizontal>.swiper-pagination-bullets.swiper-pagination-bullets-dynamic .swiper-pagination-bullet,.swiper-pagination-horizontal.swiper-pagination-bullets.swiper-pagination-bullets-dynamic .swiper-pagination-bullet{transition:.2s transform,.2s left}.swiper-horizontal.swiper-rtl>.swiper-pagination-bullets-dynamic .swiper-pagination-bullet{transition:.2s transform,.2s right}.swiper-pagination-fraction{color:var(--swiper-pagination-fraction-color,inherit)}.swiper-pagination-progressbar{background:var(--swiper-pagination-progressbar-bg-color,rgba(0,0,0,.25));position:absolute}.swiper-pagination-progressbar .swiper-pagination-progressbar-fill{background:var(--swiper-pagination-color,var(--swiper-theme-color));position:absolute;left:0;top:0;width:100%;height:100%;transform:scale(0);transform-origin:left top}.swiper-rtl .swiper-pagination-progressbar .swiper-pagination-progressbar-fill{transform-origin:right top}.swiper-horizontal>.swiper-pagination-progressbar,.swiper-pagination-progressbar.swiper-pagination-horizontal,.swiper-pagination-progressbar.swiper-pagination-vertical.swiper-pagination-progressbar-opposite,.swiper-vertical>.swiper-pagination-progressbar.swiper-pagination-progressbar-opposite{width:100%;height:var(--swiper-pagination-progressbar-size,4px);left:0;top:0}.swiper-horizontal>.swiper-pagination-progressbar.swiper-pagination-progressbar-opposite,.swiper-pagination-progressbar.swiper-pagination-horizontal.swiper-pagination-progressbar-opposite,.swiper-pagination-progressbar.swiper-pagination-vertical,.swiper-vertical>.swiper-pagination-progressbar{width:var(--swiper-pagination-progressbar-size,4px);height:100%;left:0;top:0}.swiper-pagination-lock{display:none}.swiper-scrollbar{border-radius:var(--swiper-scrollbar-border-radius,10px);position:relative;touch-action:none;background:var(--swiper-scrollbar-bg-color,rgba(0,0,0,.1))}.swiper-scrollbar-disabled>.swiper-scrollbar,.swiper-scrollbar.swiper-scrollbar-disabled{display:none!important}.swiper-horizontal>.swiper-scrollbar,.swiper-scrollbar.swiper-scrollbar-horizontal{position:absolute;left:var(--swiper-scrollbar-sides-offset,1%);bottom:var(--swiper-scrollbar-bottom,4px);top:var(--swiper-scrollbar-top,auto);z-index:50;height:var(--swiper-scrollbar-size,4px);width:calc(100% - 2 * var(--swiper-scrollbar-sides-offset,1%))}.swiper-scrollbar.swiper-scrollbar-vertical,.swiper-vertical>.swiper-scrollbar{position:absolute;left:var(--swiper-scrollbar-left,auto);right:var(--swiper-scrollbar-right,4px);top:var(--swiper-scrollbar-sides-offset,1%);z-index:50;width:var(--swiper-scrollbar-size,4px);height:calc(100% - 2 * var(--swiper-scrollbar-sides-offset,1%))}.swiper-scrollbar-drag{height:100%;width:100%;position:relative;background:var(--swiper-scrollbar-drag-bg-color,rgba(0,0,0,.5));border-radius:var(--swiper-scrollbar-border-radius,10px);left:0;top:0}.swiper-scrollbar-cursor-drag{cursor:move}.swiper-scrollbar-lock{display:none}.swiper-zoom-container{width:100%;height:100%;display:flex;justify-content:center;align-items:center;text-align:center}.swiper-zoom-container>canvas,.swiper-zoom-container>img,.swiper-zoom-container>svg{max-width:100%;max-height:100%;object-fit:contain}.swiper-slide-zoomed{cursor:move;touch-action:none}.swiper .swiper-notification{position:absolute;left:0;top:0;pointer-events:none;opacity:0;z-index:-1000}.swiper-free-mode>.swiper-wrapper{transition-timing-function:ease-out;margin:0 auto}.swiper-grid>.swiper-wrapper{flex-wrap:wrap}.swiper-grid-column>.swiper-wrapper{flex-wrap:wrap;flex-direction:column}.swiper-fade.swiper-free-mode .swiper-slide{transition-timing-function:ease-out}.swiper-fade .swiper-slide{pointer-events:none;transition-property:opacity}.swiper-fade .swiper-slide .swiper-slide{pointer-events:none}.swiper-fade .swiper-slide-active{pointer-events:auto}.swiper-fade .swiper-slide-active .swiper-slide-active{pointer-events:auto}.swiper.swiper-cube{overflow:visible}.swiper-cube .swiper-slide{pointer-events:none;-webkit-backface-visibility:hidden;backface-visibility:hidden;z-index:1;visibility:hidden;transform-origin:0 0;width:100%;height:100%}.swiper-cube .swiper-slide .swiper-slide{pointer-events:none}.swiper-cube.swiper-rtl .swiper-slide{transform-origin:100% 0}.swiper-cube .swiper-slide-active,.swiper-cube .swiper-slide-active .swiper-slide-active{pointer-events:auto}.swiper-cube .swiper-slide-active,.swiper-cube .swiper-slide-next,.swiper-cube .swiper-slide-prev{pointer-events:auto;visibility:visible}.swiper-cube .swiper-cube-shadow{position:absolute;left:0;bottom:0px;width:100%;height:100%;opacity:.6;z-index:0}.swiper-cube .swiper-cube-shadow:before{content:'';background:#000;position:absolute;left:0;top:0;bottom:0;right:0;filter:blur(50px)}.swiper-cube .swiper-slide-next+.swiper-slide{pointer-events:auto;visibility:visible}.swiper-cube .swiper-slide-shadow-cube.swiper-slide-shadow-bottom,.swiper-cube .swiper-slide-shadow-cube.swiper-slide-shadow-left,.swiper-cube .swiper-slide-shadow-cube.swiper-slide-shadow-right,.swiper-cube .swiper-slide-shadow-cube.swiper-slide-shadow-top{z-index:0;-webkit-backface-visibility:hidden;backface-visibility:hidden}.swiper.swiper-flip{overflow:visible}.swiper-flip .swiper-slide{pointer-events:none;-webkit-backface-visibility:hidden;backface-visibility:hidden;z-index:1}.swiper-flip .swiper-slide .swiper-slide{pointer-events:none}.swiper-flip .swiper-slide-active,.swiper-flip .swiper-slide-active .swiper-slide-active{pointer-events:auto}.swiper-flip .swiper-slide-shadow-flip.swiper-slide-shadow-bottom,.swiper-flip .swiper-slide-shadow-flip.swiper-slide-shadow-left,.swiper-flip .swiper-slide-shadow-flip.swiper-slide-shadow-right,.swiper-flip .swiper-slide-shadow-flip.swiper-slide-shadow-top{z-index:0;-webkit-backface-visibility:hidden;backface-visibility:hidden}.swiper-creative .swiper-slide{-webkit-backface-visibility:hidden;backface-visibility:hidden;overflow:hidden;transition-property:transform,opacity,height}.swiper.swiper-cards{overflow:visible}.swiper-cards .swiper-slide{transform-origin:center bottom;-webkit-backface-visibility:hidden;backface-visibility:hidden;overflow:hidden}
+:root{--bg:#fff;--bar:#fff;--line:#e3e0d8;--fg:#222;--mut:#777;--paper:#fffdf8;--ink:#2a2a2a;--red:#a02424;--field:#f1efe8;--acc:#2f5d8a;--font:'EB Garamond',Georgia,serif;--ta:justify;--hy:auto;--cols:1;--tb:62px;--bb:68px;--sb:env(safe-area-inset-bottom,0px);--st:env(safe-area-inset-top,0px);color-scheme:light}
+:root[data-theme=dark]{--bg:#121212;--bar:#1b1b1b;--line:#2f2f2f;--fg:#e8e6e1;--mut:#9a9a9a;--paper:#1d1d1d;--ink:#e4dfd3;--red:#e07a6f;--field:#2a2a2a;--acc:#5b93c4;color-scheme:dark}
+html,body{height:100%;margin:0;background:var(--bg);color:var(--fg);font:14px system-ui,sans-serif;overflow:hidden;-webkit-tap-highlight-color:transparent}
+button,select,input{font:inherit;color:inherit}
+.float{position:fixed;z-index:6;background:var(--bar);border:1px solid var(--line);border-radius:999px;box-shadow:0 4px 18px rgba(0,0,0,.16);display:flex;align-items:center;gap:2px;padding:4px}
+#topbar{top:calc(8px + var(--st));left:50%;transform:translateX(-50%);width:min(560px,calc(100% - 16px));box-sizing:border-box}
+#botbar{bottom:calc(10px + var(--sb));left:50%;transform:translateX(-50%);max-width:calc(100% - 12px)}
+.pill{height:40px;min-width:40px;border:0;border-radius:999px;background:transparent;padding:0 13px;cursor:pointer;white-space:nowrap;font-size:15px}
+.pill.on,.pill:active{background:var(--field)}
+.pill.bk{max-width:40vw;overflow:hidden;text-overflow:ellipsis}
+.sep{width:1px;height:22px;background:var(--line);margin:0 3px}
+#q{flex:1;min-width:0;height:40px;border:0;background:transparent;font-size:16px;padding:0 10px;outline:none}
+#res{position:fixed;left:50%;transform:translateX(-50%);top:calc(60px + var(--st));width:min(560px,calc(100% - 16px));box-sizing:border-box;max-height:48vh;overflow:auto;background:var(--paper);color:var(--ink);border:1px solid var(--line);border-radius:14px;display:none;z-index:7;box-shadow:0 10px 30px #0003}
+#res>div{padding:10px 14px;border-bottom:1px solid var(--line);cursor:pointer;font-family:var(--font);font-size:16px}
 #res b{color:var(--red)}
-#res .chips{display:flex;flex-wrap:wrap;gap:6px;cursor:default}
-#res .chips span{min-width:34px;text-align:center;padding:6px 8px;border:1px solid var(--line);border-radius:8px;cursor:pointer;background:var(--field)}
-#set{position:absolute;right:6px;top:100%;margin-top:4px;width:min(340px,calc(100% - 12px));box-sizing:border-box;background:var(--bar);border:1px solid var(--line);border-radius:12px;padding:12px;display:none;flex-direction:column;gap:10px;box-shadow:0 10px 30px #0003}
-#set.on{display:flex}
-#set .fl>label{flex:0 0 64px;color:var(--mut)}
-#set .fl>select,#set .fl>button{flex:1}
-#set .fl>span{flex:1;text-align:center}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chips span{min-width:36px;text-align:center;padding:6px 8px;border:1px solid var(--line);border-radius:8px;cursor:pointer;background:var(--field)}
+#pop{position:fixed;z-index:8;display:none;background:var(--bar);border:1px solid var(--line);border-radius:14px;box-shadow:0 10px 30px #0004;max-height:38vh;overflow:auto;bottom:calc(var(--bb) + var(--sb) + 6px);padding:6px;box-sizing:border-box}
+#pop .it{padding:9px 12px;border-radius:8px;cursor:pointer;white-space:nowrap}
+#pop .it.cur,#pop .g span.cur{background:var(--acc);color:#fff}
+#pop .g{display:grid;grid-template-columns:repeat(5,1fr);gap:4px}
+#pop .g span{text-align:center;padding:9px 0;border-radius:8px;cursor:pointer;background:var(--field)}
+.card{position:fixed;z-index:8;background:var(--bar);border:1px solid var(--line);border-radius:16px;box-shadow:0 10px 30px #0004;display:none;flex-direction:column;gap:10px;box-sizing:border-box;padding:12px}
+.card.on{display:flex}
+#set{right:8px;top:calc(60px + var(--st));width:min(340px,calc(100% - 16px));max-height:calc(100% - 140px);overflow:auto}
+#xr{left:50%;transform:translateX(-50%);bottom:calc(var(--bb) + var(--sb) + 6px);width:min(540px,calc(100% - 16px));max-height:58vh}
+#xrl{overflow:auto;display:flex;flex-direction:column;gap:2px}
+#xrl .r{padding:8px 6px;border-radius:8px;cursor:pointer;border-bottom:1px solid var(--line)}
+#xrl .r:active{background:var(--field)}
+#xrl .r small{color:var(--mut);display:block}#xrl .r b{color:var(--acc)}
+#xrl .r i{display:block;font-family:var(--font);font-style:normal;font-size:15px;color:var(--ink);opacity:.85;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fl{display:flex;gap:6px;align-items:center}
+.fl>label{flex:0 0 74px;color:var(--mut)}
+.fl>select,.fl>button,.btn{flex:1;min-width:0;height:38px;border-radius:10px;border:1px solid var(--line);background:var(--field);padding:0 10px;cursor:pointer}
+.fl>span{flex:1;text-align:center}
+.btn.pri,.fl>button.pri{background:var(--acc);border-color:var(--acc);color:#fff}
+.btn.del{color:#c0392b}
+.hd{display:flex;align-items:center;gap:8px}.hd b{flex:1}
+.x{flex:0 0 36px;height:36px;border-radius:50%;border:0;background:var(--field);cursor:pointer}
 #mdl{position:fixed;inset:0;background:#0007;display:none;align-items:center;justify-content:center;z-index:9}
 #mdl.on{display:flex}
-#mb{background:var(--bar);color:var(--fg);width:min(460px,92vw);max-height:85vh;overflow:auto;border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:10px;box-sizing:border-box}
-#mb h3{margin:0;flex:1}#mb small{color:var(--mut)}#mb a{color:var(--acc)}
-#mb input{height:40px;box-sizing:border-box;border-radius:10px;border:1px solid var(--line);background:var(--field);color:var(--fg);padding:0 10px;font-size:14px}
-#mb select{width:100%}
-#tlist{display:flex;flex-direction:column;gap:8px}#tlist button{flex:0 0 auto;height:34px}
+#mb{background:var(--bar);width:min(460px,92vw);max-height:85vh;overflow:auto;border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:10px;box-sizing:border-box}
+#mb small{color:var(--mut)}#mb a{color:var(--acc)}
+#mb input,#mb select{height:40px;box-sizing:border-box;border-radius:10px;border:1px solid var(--line);background:var(--field);padding:0 10px;width:100%}
+#tlist{display:flex;flex-direction:column;gap:8px}#tlist button{flex:0 0 auto;height:34px;padding:0 12px;border-radius:10px;border:1px solid var(--line);background:var(--field);cursor:pointer}
 progress{width:100%}
-#stage{flex:1;min-height:0;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;touch-action:none;user-select:none;-webkit-user-select:none}
-#wrap{position:relative}
-#empty{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;gap:12px;text-align:center;padding:24px;background:var(--bg)}
-#empty button{flex:0 0 auto;width:min(280px,100%)}
-.nob #q,.nob .row{opacity:.4;pointer-events:none}
-.pg{box-sizing:border-box;padding:2.3em 1.9em 2.8em;background:var(--paper);overflow:hidden;font-family:var(--font);color:var(--ink);font-size:var(--fs);line-height:1.5;text-align:justify;hyphens:auto}
-.pg.l{background:linear-gradient(to left,rgba(0,0,0,.14),transparent 7%),var(--paper)}
-.pg.r{background:linear-gradient(to right,rgba(0,0,0,.14),transparent 7%),var(--paper)}
-.pb{height:100%;overflow:hidden}
-.ft{position:absolute;bottom:1.1em;left:0;right:0;text-align:center;font-size:.7em;opacity:.6}
+#sw{position:fixed;left:0;right:0;top:calc(var(--tb) + var(--st));bottom:calc(var(--bb) + var(--sb));perspective:1500px;touch-action:none;user-select:none;-webkit-user-select:none}
+#empty{position:fixed;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;gap:12px;text-align:center;padding:24px;background:var(--bg);z-index:4}
+#empty .btn{flex:0 0 auto;width:min(300px,100%)}
+.nob #botbar,.nob #q{opacity:.4;pointer-events:none}
+.pg{box-sizing:border-box;width:100%;height:100%;padding:1.2em 1.4em 2.2em;background:var(--paper);overflow:hidden;font-family:var(--font);color:var(--ink);font-size:var(--fs);line-height:1.5;text-align:var(--ta);hyphens:var(--hy);position:relative;border-radius:4px;box-shadow:inset 0 0 0 1px rgba(0,0,0,.06)}
+.pb{height:100%;overflow:hidden;column-count:var(--cols);column-gap:2.4em;column-fill:auto}
+.ft{position:absolute;bottom:.7em;left:0;right:0;text-align:center;font-size:.7em;opacity:.6}
 .meas{position:absolute;left:-99999px;top:0;width:var(--W);height:var(--H);visibility:hidden}
-h2{margin:0;text-align:center;font-weight:500;font-size:1.5em;letter-spacing:.08em;text-transform:uppercase;color:var(--red)}
-h3.c{margin:0 0 .6em;text-align:center;font-weight:400;font-style:italic;font-size:1em}
+h2{margin:0;text-align:center;font-weight:500;font-size:1.5em;letter-spacing:.08em;text-transform:uppercase;color:var(--red);column-span:all}
+h3.c{margin:0 0 .6em;text-align:center;font-weight:400;font-style:italic;font-size:1em;column-span:all}
 sup{color:var(--red);font-size:.6em;margin-right:.15em;font-weight:700}
 .hl{background:#ffd95e88}
-.ttl .pb{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:.8em}
+.ttl .pb{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:.8em;column-count:1}
 .ttl h1{font-size:2.2em;margin:0;color:var(--red);font-weight:500}
-.nb{height:auto;padding:.6em 1em;font:inherit;font-size:.8em;color:var(--ink);background:var(--field);border:1px solid var(--line);border-radius:10px;flex:0 0 auto}
+.nb{padding:.6em 1em;font:inherit;font-size:.8em;color:var(--ink);background:var(--field);border:1px solid var(--line);border-radius:10px;cursor:pointer}
 </style></head><body class="nob">
-<div id="top">
-<div class="fl"><input id="q" type="search" placeholder="Buscar cita bíblica" autocomplete="off"><button id="gear" class="sm" title="Ajustes">⚙</button></div>
-<div class="row"><select id="bs" title="Libro"></select><select id="cs" title="Capítulo"></select><select id="ns" title="Versículo"></select></div>
+<div id="topbar" class="float"><input id="q" type="search" placeholder="Buscar cita bíblica" autocomplete="off"><button id="gear" class="pill" title="Ajustes">⚙</button></div>
 <div id="res"></div>
-<div id="set">
+<div id="sw" class="swiper"><div class="swiper-wrapper"></div></div>
+<div id="botbar" class="float"><button id="bkb" class="pill bk" data-p="b" title="Libro"></button><button id="chb" class="pill" data-p="c" title="Capítulo"></button><button id="vsb" class="pill" data-p="v" title="Versículo"></button><span class="sep"></span><button id="xrb" class="pill" title="Conexiones">🔗</button><button id="backb" class="pill" title="Volver" style="display:none">↩</button></div>
+<div id="pop"></div>
+<div id="xr" class="card"><div class="hd"><b id="xrt">Conexiones</b><button id="xrx" class="x">✕</button></div>
+<div class="fl"><select id="xrb1" style="flex:1"></select><select id="xrv" style="flex:1"></select></div>
+<div id="xrl"></div><small style="color:var(--mut)">Referencias cruzadas: OpenBible.info (CC BY 4.0), vía trekhleb/bible-cross-references.</small></div>
+<div id="set" class="card">
 <div class="fl"><label>Biblia</label><select id="vs"></select></div>
+<button id="del" class="btn del">Eliminar esta Biblia</button>
 <div class="fl"><label>Tema</label><button id="thl">Claro</button><button id="thd">Oscuro</button></div>
 <div class="fl"><label>Letra</label><select id="fsel"></select></div>
 <div class="fl"><label>Tamaño</label><button id="fm">A−</button><span id="zv">100%</span><button id="fp">A+</button></div>
-<button id="imp">Importar archivo (JSON o XML)</button>
-<button id="api" class="pri">Descargar Biblia por internet</button>
-</div></div>
-<div id="stage"><div id="wrap"></div>
-<div id="empty"><h2 style="font-size:1.3em">Aún no hay ninguna Biblia</h2><div style="color:var(--mut)">Descarga una por internet o importa un archivo.</div><button id="e1" class="pri">Descargar Biblia por internet</button><button id="e2">Importar archivo (JSON o XML)</button></div></div>
+<div class="fl"><label>Texto</label><button id="tj">Justificado</button><button id="tl">Izquierda</button><button id="tc">Centro</button></div>
+<div class="fl"><label>Libros</label><button id="ob">Bíblico</button><button id="oa">A–Z</button></div>
+<button id="imp" class="btn">Importar archivo (JSON o XML)</button>
+<button id="api" class="btn pri">Descargar Biblia por internet</button>
+</div>
+<div id="empty"><div style="font-size:1.3em;font-weight:600">Aún no hay ninguna Biblia</div><div style="color:var(--mut)">Descarga una por internet o importa un archivo.</div><button id="e1" class="btn pri">Descargar Biblia por internet</button><button id="e2" class="btn">Importar archivo (JSON o XML)</button></div>
 <input type="file" id="file" accept=".json,.xml,application/json,text/xml,application/xml" hidden>
 <div id="mdl"><div id="mb">
-<div class="fl"><h3>Descargar Biblia</h3><button id="mx" class="sm">✕</button></div>
+<div class="hd"><b style="font-size:1.1em">Descargar Biblia</b><button id="mx" class="x">✕</button></div>
 <b>1. Idioma</b><input id="lf" placeholder="Filtrar idioma…"><select id="lsel"></select>
 <b>2. Traducciones</b><div id="tlist"><small>Primero elige un idioma.</small></div>
 <progress id="pr" hidden></progress><small id="mm"></small>
-<small>Fuentes gratuitas: helloao.org, TheBibleAPI y GitHub (wldeh y mrk214). Cada traducción tiene su propia licencia; las versiones modernas (RVR1960, NVI, etc.) tienen derechos de autor: úsalas solo de forma personal.</small>
+<small>Fuentes: GitHub (scrollmapper/bible_databases y mrk214/bible-data-es-spa). Cada traducción tiene su propia licencia; las versiones modernas (RVR1960, NVI, etc.) tienen derechos de autor: úsalas solo de forma personal.</small>
 </div></div>
-<script src="lib/page-flip.browser.js"></script>
+<script src="lib/swiper-bundle.min.js"></script>
 <script>
 const $=s=>document.querySelector(s);
 const norm=s=>s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const st=(k,v)=>{try{if(v===undefined)return localStorage.getItem(k);localStorage.setItem(k,v)}catch(e){}return null};
 const clamp=(x,a,b)=>Math.min(b,Math.max(a,x));
-const API='https://bible.helloao.org';
 const SP='Génesis,Éxodo,Levítico,Números,Deuteronomio,Josué,Jueces,Rut,1 Samuel,2 Samuel,1 Reyes,2 Reyes,1 Crónicas,2 Crónicas,Esdras,Nehemías,Ester,Job,Salmos,Proverbios,Eclesiastés,Cantares,Isaías,Jeremías,Lamentaciones,Ezequiel,Daniel,Oseas,Joel,Amós,Abdías,Jonás,Miqueas,Nahúm,Habacuc,Sofonías,Hageo,Zacarías,Malaquías,Mateo,Marcos,Lucas,Juan,Hechos,Romanos,1 Corintios,2 Corintios,Gálatas,Efesios,Filipenses,Colosenses,1 Tesalonicenses,2 Tesalonicenses,1 Timoteo,2 Timoteo,Tito,Filemón,Hebreos,Santiago,1 Pedro,2 Pedro,1 Juan,2 Juan,3 Juan,Judas,Apocalipsis'.split(',');
 const OS='Gen,Exod,Lev,Num,Deut,Josh,Judg,Ruth,1Sam,2Sam,1Kgs,2Kgs,1Chr,2Chr,Ezra,Neh,Esth,Job,Ps,Prov,Eccl,Song,Isa,Jer,Lam,Ezek,Dan,Hos,Joel,Amos,Obad,Jonah,Mic,Nah,Hab,Zeph,Hag,Zech,Mal,Matt,Mark,Luke,John,Acts,Rom,1Cor,2Cor,Gal,Eph,Phil,Col,1Thess,2Thess,1Tim,2Tim,Titus,Phlm,Heb,Jas,1Pet,2Pet,1John,2John,3John,Jude,Rev'.split(',');
-let bibles=[],bible=null,pf=null,B_=0,cur=0,pgs=[],cache={},idx=null,pw=300,ph=400,wide=false,fz=+st('fz')||1,cvc={c:0,v:0};
-const stage=$('#stage'),wrap=$('#wrap'),bk=()=>bible.books;
+const US='GEN EXO LEV NUM DEU JOS JDG RUT 1SA 2SA 1KI 2KI 1CH 2CH EZR NEH EST JOB PSA PRO ECC SNG ISA JER LAM EZK DAN HOS JOL AMO OBA JON MIC NAM HAB ZEP HAG ZEC MAL MAT MRK LUK JHN ACT ROM 1CO 2CO GAL EPH PHP COL 1TH 2TH 1TI 2TI TIT PHM HEB JAS 1PE 2PE 1JN 2JN 3JN JUD REV'.split(' ');
+const EN='Genesis,Exodus,Leviticus,Numbers,Deuteronomy,Joshua,Judges,Ruth,1 Samuel,2 Samuel,1 Kings,2 Kings,1 Chronicles,2 Chronicles,Ezra,Nehemiah,Esther,Job,Psalms,Proverbs,Ecclesiastes,Song of Solomon,Isaiah,Jeremiah,Lamentations,Ezekiel,Daniel,Hosea,Joel,Amos,Obadiah,Jonah,Micah,Nahum,Habakkuk,Zephaniah,Haggai,Zechariah,Malachi,Matthew,Mark,Luke,John,Acts,Romans,1 Corinthians,2 Corinthians,Galatians,Ephesians,Philippians,Colossians,1 Thessalonians,2 Thessalonians,1 Timothy,2 Timothy,Titus,Philemon,Hebrews,James,1 Peter,2 Peter,1 John,2 John,3 John,Jude,Revelation'.split(',');
+const ENN=EN.map(x=>x.toLowerCase());
+const canonEn=n=>ENN.indexOf(n.toLowerCase().replace(/^iii /,'3 ').replace(/^ii /,'2 ').replace(/^i /,'1 ').replace(/ of john$/,'').replace('song of songs','song of solomon'));
+function ensureK(b){b.books.forEach((x,i)=>{if(x.k==null){let k=canonEn(x.name);if(k<0){const n=norm(x.name);k=SP.findIndex(s=>norm(s)==n)}if(k<0&&b.books.length==66)k=i;x.k=k}});return b}
+let bibles=[],bible=null,sw=null,B_=0,cur=0,pgs=[],cache={},idx=null,pw=300,ph=400,cols=1,fz=+st('fz')||1,cvc={c:0,v:0},hlk=null,hist=[],kmap={};
+let ta=st('ta')||'justify',ord=st('ord')||'bib';
+const bk=()=>bible.books;
 const chs=b=>{const r=[];bk()[b].ch.forEach((v,i)=>{if(v&&v.length)r.push(i)});return r};
+const order=()=>{const l=bk().map((_,i)=>i).filter(i=>chs(i).length);return ord=='alpha'?l.sort((a,b)=>norm(bk()[a].name).localeCompare(norm(bk()[b].name),'es')):l};
 const head=(b,c)=>`<h2>${esc(bk()[b].name)}</h2><h3 class="c">Capítulo ${c+1}</h3>`;
-const vh=(b,c,i)=>{const x=bk()[b].ch[c][i];return x?`<span data-k="${c}.${i}"><sup>${i+1}</sup>${esc(x)} </span>`:''};
+const vh=(b,c,i)=>{const x=bk()[b].ch[c][i];return x?`<span data-k="${c}.${i}"${hlk==c+'.'+i?' class="hl"':''}><sup>${i+1}</sup>${esc(x)} </span>`:''};
 const meas=document.createElement('div');meas.className='pg meas';document.body.appendChild(meas);
 function pg(b,c){const k=b+'.'+c;if(cache[k])return cache[k];const vs=bk()[b].ch[c],out=[];meas.innerHTML='<div class="pb"></div>';const bd=meas.firstChild;bd.innerHTML=head(b,c);let s=0,n=0;
 for(let i=0;i<vs.length;i++){const sp=document.createElement('span');sp.innerHTML=vh(b,c,i);bd.appendChild(sp);n++;
-if(bd.scrollHeight>bd.clientHeight+1&&n>1){bd.removeChild(sp);out.push([s,i]);s=i;bd.innerHTML='';bd.appendChild(sp);n=1}}
+if((bd.scrollHeight>bd.clientHeight+1||bd.scrollWidth>bd.clientWidth+1)&&n>1){bd.removeChild(sp);out.push([s,i]);s=i;bd.innerHTML='';bd.appendChild(sp);n=1}}
 out.push([s,vs.length]);return cache[k]=out}
 const nbk=(b,d)=>{b+=d;while(b>=0&&b<bk().length&&!chs(b).length)b+=d;return b>=0&&b<bk().length?b:-1};
-function pageHtml(d,i){const cls='pg '+(i%2?'r':'l'),nm=bk()[B_].name;
-if(d.t=='T'){const p=nbk(B_,-1);return `<div class="${cls} ttl" data-density="soft"><div class="pb"><h1>${esc(nm)}</h1><div>${chs(B_).length} capítulos</div>${p>=0?`<button class="nb" data-go="-1">← ${esc(bk()[p].name)}</button>`:''}</div></div>`}
-if(d.t=='E'){const n=nbk(B_,1);return `<div class="${cls} ttl" data-density="soft"><div class="pb"><div>Fin de ${esc(nm)}</div>${n>=0?`<button class="nb" data-go="1">${esc(bk()[n].name)} →</button>`:''}</div></div>`}
-let h='<div class="pb">'+(d.p?'':head(B_,d.c));for(let i=d.s;i<d.e;i++)h+=vh(B_,d.c,i);return `<div class="${cls}" data-density="soft">${h}</div><div class="ft">${esc(nm)} ${d.c+1}</div></div>`.replace('</div><div class="ft">','</div><div class="ft">')}
+function slideHtml(i){const d=pgs[i],nm=bk()[B_].name;let h;
+if(d.t=='T'){const p=nbk(B_,-1);h=`<div class="pg ttl"><div class="pb"><h1>${esc(nm)}</h1><div>${chs(B_).length} capítulos</div>${p>=0?`<button class="nb" data-go="-1">← ${esc(bk()[p].name)}</button>`:''}</div></div>`}
+else if(d.t=='E'){const n=nbk(B_,1);h=`<div class="pg ttl"><div class="pb"><div>Fin de ${esc(nm)}</div>${n>=0?`<button class="nb" data-go="1">${esc(bk()[n].name)} →</button>`:''}</div></div>`}
+else{let t=d.p?'':head(B_,d.c);for(let k=d.s;k<d.e;k++)t+=vh(B_,d.c,k);h=`<div class="pg"><div class="pb">${t}</div><div class="ft">${esc(nm)} ${d.c+1}</div></div>`}
+return `<div class="swiper-slide">${h}</div>`}
 const idxOf=(c,v)=>{const i=pgs.findIndex(d=>d.t=='C'&&d.c==c&&(v==null?d.p==0:(v>=d.s&&v<d.e)));return i<0?1:i};
-function rebuild(b,tg){try{pf&&pf.destroy()}catch(e){}pf=null;
-const aw=stage.clientWidth,ah=stage.clientHeight;wide=aw>=700&&aw/ah>1.25;ph=Math.floor(ah);pw=Math.floor(wide?Math.min(aw/2,ph*.9):aw);
-const d=document.documentElement.style;d.setProperty('--W',pw+'px');d.setProperty('--H',ph+'px');d.setProperty('--fs',Math.max(14,pw/21)*fz+'px');
+function rebuild(b,tg){try{sw&&sw.destroy(true,true)}catch(e){}sw=null;
+const box=$('#sw'),aw=box.clientWidth,ah=box.clientHeight;cols=aw>=700&&aw/ah>1.25?2:1;ph=Math.floor(ah);pw=Math.floor(aw);
+const d=document.documentElement.style;d.setProperty('--W',pw+'px');d.setProperty('--H',ph+'px');d.setProperty('--cols',cols);d.setProperty('--fs',(cols==2?Math.max(15,pw/46):Math.max(15,pw/21))*fz+'px');
 cache={};B_=b;pgs=[{t:'T'}];chs(b).forEach(c=>pg(b,c).forEach((r,p)=>pgs.push({t:'C',c,p,s:r[0],e:r[1]})));pgs.push({t:'E'});
-wrap.style.cssText=`width:${wide?2*pw:pw}px;height:${ph}px`;wrap.innerHTML='<div id="bkx"></div>';const el=$('#bkx');el.style.cssText=`width:${wide?2*pw:pw}px;height:${ph}px`;el.innerHTML=pgs.map(pageHtml).join('');
+box.innerHTML='<div class="swiper-wrapper"></div>';
 const start=tg?(tg.i!=null?tg.i:idxOf(tg.c,tg.v)):1;
-if(typeof St=='undefined'){wrap.innerHTML='<p style="padding:20px">No se pudo cargar la librería de páginas. Revisa tu conexión.</p>';return}
-pf=new St.PageFlip(el,{width:pw,height:ph,size:'fixed',showCover:false,usePortrait:true,drawShadow:true,flippingTime:900,maxShadowOpacity:.45,mobileScrollSupport:false,swipeDistance:15,clickEventForward:true,startPage:start});
-pf.loadFromHTML(el.querySelectorAll('.pg'));pf.on('flip',e=>{cur=e.data;sync()});
-cur=start;sync();if(tg&&tg.v!=null)hlv(tg.c,tg.v);zv()}
+if(typeof Swiper=='undefined'){box.innerHTML='<p style="padding:20px">No se pudo cargar la librería de páginas. Revisa tu conexión.</p>';return}
+sw=new Swiper(box,{effect:'creative',speed:380,initialSlide:start,resistanceRatio:0,threshold:8,longSwipesRatio:.25,
+virtual:{enabled:true,slides:pgs.map((_,i)=>i),renderSlide:(s,i)=>slideHtml(i),addSlidesBefore:2,addSlidesAfter:2},
+creativeEffect:{limitProgress:1,prev:{shadow:true,translate:[0,0,0],rotate:[0,-100,0],origin:'left center'},next:{translate:[0,0,-1]}}});
+sw.on('slideChange',()=>{cur=sw.activeIndex;sync()});
+sw.on('tap',(s,e)=>{if(e.target.closest&&e.target.closest('button'))return;const r=box.getBoundingClientRect(),x=((e.clientX!=null?e.clientX:(e.changedTouches&&e.changedTouches[0].clientX))-r.left)/r.width;if(x<.22)sw.slidePrev();else if(x>.78)sw.slideNext()});
+cur=start;sync();if(tg&&tg.v!=null)setTimeout(()=>hlv(tg.c,tg.v),80);zv()}
 function sync(){let i=cur;while(i<pgs.length&&pgs[i].t!='C')i++;if(i>=pgs.length){i=cur;while(i>=0&&pgs[i].t!='C')i--}const d=pgs[Math.max(i,0)];if(!d||d.t!='C')return;
-cvc={c:d.c,v:d.s};const bs=$('#bs'),cs=$('#cs'),ns=$('#ns');bs.value=B_;cs.innerHTML=chs(B_).map(c=>`<option value="${c}">Cap. ${c+1}</option>`).join('');cs.value=d.c;
-ns.innerHTML=Array.from({length:bk()[B_].ch[d.c].length},(_,k)=>`<option value="${k}">Vers. ${k+1}</option>`).join('');ns.value=d.s;
+cvc={c:d.c,v:d.s};$('#bkb').textContent=bk()[B_].name;$('#chb').textContent=d.c+1;$('#vsb').textContent=d.s+1;
 st('pos_'+bible.id,JSON.stringify({b:B_,c:d.c,v:d.s}))}
-function hlv(c,v){document.querySelectorAll('.hl').forEach(e=>e.classList.remove('hl'));const e=document.querySelector(`[data-k="${c}.${v}"]`);if(e)e.classList.add('hl')}
-function goTo(b,c,v){if(!pf||b!=B_)rebuild(b,{c,v});else{pf.flip(idxOf(c,v));hlv(c,v)}}
-function goBook(b){if(b<0||b>=bk().length)return;rebuild(b,{i:0})}
-stage.addEventListener('click',e=>{const g=e.target.closest('[data-go]');if(g&&!g._t){g._t=1;setTimeout(()=>g._t=0,600);goBook(nbk(B_,+g.dataset.go))}});
-function useBible(i){bible=bibles[i];idx=null;$('#vs').value=i;document.body.classList.remove('nob');$('#empty').style.display='none';
-$('#bs').innerHTML=bk().map((b,k)=>`<option value="${k}">${esc(b.name)}</option>`).join('');
+function hlv(c,v){hlk=c+'.'+v;document.querySelectorAll('.hl').forEach(e=>e.classList.remove('hl'));const e=document.querySelector(`[data-k="${c}.${v}"]`);if(e)e.classList.add('hl')}
+function goTo(b,c,v){if(!bk()[b]||!bk()[b].ch[c])return;if(!sw||b!=B_){rebuild(b,{c,v});if(v!=null)hlk=c+'.'+v;return}
+const i=idxOf(c,v);if(v!=null)hlk=c+'.'+v;else hlk=null;sw.slideTo(i,Math.abs(i-cur)>3?0:420);if(v!=null)setTimeout(()=>hlv(c,v),120)}
+function jump(b,c,v){hist.push({b:B_,c:cvc.c,v:cvc.v});$('#backb').style.display='';goTo(b,c,v)}
+$('#backb').onclick=()=>{const h=hist.pop();if(!hist.length)$('#backb').style.display='none';if(h)goTo(h.b,h.c,h.v)};
+$('#sw').addEventListener('click',e=>{const g=e.target.closest('[data-go]');if(g&&!g._t){g._t=1;setTimeout(()=>g._t=0,600);const n=nbk(B_,+g.dataset.go);if(n>=0)rebuild(n,{i:+g.dataset.go<0?pgs.length-1:0})}});
+function useBible(i){bible=ensureK(bibles[i]);idx=null;kmap={};bk().forEach((b,j)=>{if(b.k>=0)kmap[b.k]=j});hist=[];$('#backb').style.display='none';$('#vs').value=i;document.body.classList.remove('nob');$('#empty').style.display='none';
 let b=bk().findIndex((_,k)=>chs(k).length),tg=null;try{const p=JSON.parse(st('pos_'+bible.id));if(p&&bk()[p.b]&&bk()[p.b].ch[p.c]){b=p.b;tg={c:p.c,v:p.v}}}catch(e){}
 rebuild(b,tg);st('last',bible.id)}
 function fillVs(){$('#vs').innerHTML=bibles.map((b,i)=>`<option value="${i}">${esc(b.name)}</option>`).join('')}
-let lt;const relayout=()=>{clearTimeout(lt);lt=setTimeout(()=>{if(bible&&pf)rebuild(B_,{c:cvc.c,v:cvc.v})},200)};
+let lt;const relayout=()=>{clearTimeout(lt);lt=setTimeout(()=>{if(bible&&sw)rebuild(B_,{c:cvc.c,v:cvc.v})},220)};
 addEventListener('resize',relayout);
 $('#vs').onchange=e=>useBible(+e.target.value);
-$('#bs').onchange=e=>{const b=+e.target.value;goTo(b,chs(b)[0])};
-$('#cs').onchange=()=>goTo(B_,+$('#cs').value);
-$('#ns').onchange=()=>goTo(B_,+$('#cs').value,+$('#ns').value);
-addEventListener('keydown',e=>{if(['INPUT','SELECT'].includes(e.target.tagName)||!pf)return;if(e.key=='ArrowRight')pf.flipNext();if(e.key=='ArrowLeft')pf.flipPrev()});
+addEventListener('keydown',e=>{if(['INPUT','SELECT'].includes(e.target.tagName)||!sw)return;if(e.key=='ArrowRight')sw.slideNext();if(e.key=='ArrowLeft')sw.slidePrev()});
+// Selectores flotantes (libro / capítulo / versículo) con lista pequeña
+const pop=$('#pop');let popFor=null;
+function openPop(kind,btn){if(!bible)return;if(popFor==kind){closePop();return}popFor=kind;document.querySelectorAll('#botbar .pill').forEach(x=>x.classList.toggle('on',x==btn));let h,w=270;
+if(kind=='b'){w=230;h=order().map(i=>`<div class="it${i==B_?' cur':''}" data-bk="${i}">${esc(bk()[i].name)}</div>`).join('')}
+else if(kind=='c')h='<div class="g">'+chs(B_).map(c=>`<span data-c="${c}" class="${c==cvc.c?'cur':''}">${c+1}</span>`).join('')+'</div>';
+else h='<div class="g">'+Array.from({length:bk()[B_].ch[cvc.c].length},(_,v)=>`<span data-v="${v}" class="${v==cvc.v?'cur':''}">${v+1}</span>`).join('')+'</div>';
+pop.innerHTML=h;pop.style.width=w+'px';const r=btn.getBoundingClientRect();pop.style.left=clamp(r.left+r.width/2-w/2,8,innerWidth-w-8)+'px';pop.style.display='block';const c=pop.querySelector('.cur');if(c)c.scrollIntoView({block:'center'})}
+function closePop(){popFor=null;pop.style.display='none';document.querySelectorAll('#botbar .pill').forEach(x=>x.classList.remove('on'))}
+document.querySelectorAll('[data-p]').forEach(b=>b.onclick=e=>{e.stopPropagation();openPop(b.dataset.p,b)});
+pop.onclick=e=>{const t=e.target.closest('[data-bk],[data-c],[data-v]');if(!t)return;const d=t.dataset;if(d.bk!=null)goTo(+d.bk,chs(+d.bk)[0]);else if(d.c!=null)goTo(B_,+d.c);else goTo(B_,cvc.c,+d.v);closePop()};
 // Ajustes
-const FONTS={'EB Garamond':"'EB Garamond',Georgia,serif",'Lora':"'Lora',Georgia,serif",'Atkinson Hyperlegible':"'Atkinson Hyperlegible',system-ui,sans-serif",'Georgia':"Georgia,serif",'Sans del sistema':"system-ui,sans-serif"};
-$('#fsel').innerHTML=Object.keys(FONTS).map(f=>`<option>${f}</option>`).join('');
-async function setFont(f,re){if(!FONTS[f])f='EB Garamond';$('#fsel').value=f;document.documentElement.style.setProperty('--font',FONTS[f]);st('fnt',f);try{await Promise.all([400,500,700].map(w=>document.fonts.load(w+' 16px '+FONTS[f].split(',')[0])))}catch(e){}if(re)relayout()}
+const SYS="system-ui,-apple-system,'Segoe UI',Roboto,sans-serif";
+const FONTS={'EB Garamond':"'EB Garamond',Georgia,serif",'Lora':"'Lora',Georgia,serif",'Atkinson Hyperlegible':"'Atkinson Hyperlegible',system-ui,sans-serif",'Georgia':"Georgia,serif",'Fuente del sistema':SYS};
+function fillFonts(){const cu=st('fcustom');$('#fsel').innerHTML=Object.keys(FONTS).map(f=>`<option>${f}</option>`).join('')+(cu?`<option value="custom">${esc(cu)} (instalada)</option>`:'')+'<option value="__ask">Otra fuente instalada…</option>'+('queryLocalFonts' in window?'<option value="__list">Elegir de mis fuentes…</option>':'')}
+async function setFont(f,re){let stack;if(f=='custom'){stack=`'${(st('fcustom')||'').replace(/'/g,'')}',${SYS}`}else{if(!FONTS[f])f='EB Garamond';stack=FONTS[f]}
+$('#fsel').value=f;document.documentElement.style.setProperty('--font',stack);st('fnt',f);if(FONTS[f]){try{await Promise.all([400,500,700].map(w=>document.fonts.load(w+' 16px '+FONTS[f].split(',')[0])))}catch(e){}}if(re)relayout()}
 function setTheme(t){document.documentElement.dataset.theme=t;st('th',t);$('#thl').classList.toggle('pri',t=='light');$('#thd').classList.toggle('pri',t=='dark')}
+function setAlign(a,re){ta=a;st('ta',a);const d=document.documentElement.style;d.setProperty('--ta',a);d.setProperty('--hy',a=='justify'?'auto':'manual');[['tj','justify'],['tl','left'],['tc','center']].forEach(([i,v])=>$('#'+i).classList.toggle('pri',v==a));if(re)relayout()}
+function setOrd(o){ord=o;st('ord',o);$('#ob').classList.toggle('pri',o=='bib');$('#oa').classList.toggle('pri',o=='alpha')}
 const zv=()=>$('#zv').textContent=Math.round(fz*100)+'%';
 const zoom=d=>{fz=clamp(+(fz+d).toFixed(2),.7,2.4);st('fz',fz);zv();relayout()};
-$('#fsel').onchange=e=>setFont(e.target.value,1);
+$('#fsel').onchange=async e=>{const v=e.target.value;if(v=='__ask'){const n=prompt('Escribe el nombre exacto de una fuente instalada en tu dispositivo (ej. Roboto, Arial, Verdana):');if(n&&n.trim()){st('fcustom',n.trim());fillFonts();setFont('custom',1)}else{fillFonts();setFont(st('fnt')||'EB Garamond')}return}
+if(v=='__list'){try{const l=await window.queryLocalFonts(),fam=[...new Set(l.map(x=>x.family))].sort();const n=prompt('Fuentes disponibles (escribe una):\n'+fam.slice(0,80).join(', '));if(n&&n.trim()){st('fcustom',n.trim());fillFonts();setFont('custom',1)}else{fillFonts();setFont(st('fnt')||'EB Garamond')}}catch(x){fillFonts();setFont(st('fnt')||'EB Garamond')}return}
+setFont(v,1)};
 $('#thl').onclick=()=>setTheme('light');$('#thd').onclick=()=>setTheme('dark');
 $('#fm').onclick=()=>zoom(-.1);$('#fp').onclick=()=>zoom(.1);
-$('#gear').onclick=()=>{$('#set').classList.toggle('on');res.style.display='none'};
-document.addEventListener('click',e=>{if(!e.target.closest('#set,#gear'))$('#set').classList.remove('on');if(!e.target.closest('#res,#q'))res.style.display='none'});
+$('#tj').onclick=()=>setAlign('justify',1);$('#tl').onclick=()=>setAlign('left',1);$('#tc').onclick=()=>setAlign('center',1);
+$('#ob').onclick=()=>setOrd('bib');$('#oa').onclick=()=>setOrd('alpha');
+$('#gear').onclick=e=>{e.stopPropagation();$('#set').classList.toggle('on');closePop();res.style.display='none'};
+$('#del').onclick=async()=>{if(!bible)return;if(!confirm('¿Eliminar «'+bible.name+'» de este dispositivo?'))return;const id=bible.id;bibles=bibles.filter(b=>b.id!=id);await delDb(id);st('pos_'+id,'');bible=null;try{sw&&sw.destroy(true,true)}catch(e){}sw=null;$('#sw').innerHTML='<div class="swiper-wrapper"></div>';$('#set').classList.remove('on');fillVs();
+if(bibles.length)useBible(bibles.length-1);else{document.body.classList.add('nob');$('#empty').style.display='flex';['#bkb','#chb','#vsb'].forEach(s=>$(s).textContent='')}};
+document.addEventListener('click',e=>{if(!e.target.closest('#set,#gear'))$('#set').classList.remove('on');if(!e.target.closest('#res,#q'))res.style.display='none';if(!e.target.closest('#pop,#botbar'))closePop();if(!e.target.closest('#xr,#xrb'))$('#xr').classList.remove('on')});
 // Zoom táctil (pellizcar) y Ctrl+rueda
 let pz=null,blk=false;const dist=t=>Math.hypot(t[0].clientX-t[1].clientX,t[0].clientY-t[1].clientY);
-const cap={capture:true,passive:false};
-stage.addEventListener('touchstart',e=>{if(e.touches.length>=2){pz={d:dist(e.touches),s:1};blk=true}if(blk){e.stopPropagation();e.preventDefault()}},cap);
-stage.addEventListener('touchmove',e=>{if(!blk)return;e.stopPropagation();e.preventDefault();if(pz&&e.touches.length>=2){pz.s=clamp(dist(e.touches)/pz.d,.5,2.5);wrap.style.transform=`scale(${pz.s})`}},cap);
-stage.addEventListener('touchend',e=>{if(!blk)return;e.stopPropagation();if(pz&&e.touches.length<2){const s=pz.s;pz=null;wrap.style.transform='';if(Math.abs(s-1)>.05){fz=clamp(+(fz*s).toFixed(2),.7,2.4);st('fz',fz);zv();relayout()}}if(e.touches.length==0){blk=false;pz=null;wrap.style.transform=''}},cap);
-stage.addEventListener('wheel',e=>{if(!e.ctrlKey)return;e.preventDefault();zoom(e.deltaY<0?.1:-.1)},{passive:false});
+const cap={capture:true,passive:false},swEl=$('#sw');
+swEl.addEventListener('touchstart',e=>{if(e.touches.length>=2){pz={d:dist(e.touches),s:1};blk=true}if(blk){e.stopPropagation();e.preventDefault()}},cap);
+swEl.addEventListener('touchmove',e=>{if(!blk)return;e.stopPropagation();e.preventDefault();if(pz&&e.touches.length>=2){pz.s=clamp(dist(e.touches)/pz.d,.5,2.5);swEl.style.transform=`scale(${pz.s})`}},cap);
+swEl.addEventListener('touchend',e=>{if(!blk)return;e.stopPropagation();if(pz&&e.touches.length<2){const s=pz.s;pz=null;swEl.style.transform='';if(Math.abs(s-1)>.05){fz=clamp(+(fz*s).toFixed(2),.7,2.4);st('fz',fz);zv();relayout()}}if(e.touches.length==0){blk=false;pz=null;swEl.style.transform=''}},cap);
+swEl.addEventListener('wheel',e=>{if(!e.ctrlKey)return;e.preventDefault();zoom(e.deltaY<0?.1:-.1)},{passive:false});
 // Búsqueda con autocompletado
 const res=$('#res');let qt;
 $('#q').oninput=()=>{clearTimeout(qt);qt=setTimeout(()=>search(),120)};
@@ -160,7 +217,7 @@ function textSearch(t){if(!idx){idx=[];bk().forEach((bo,b)=>bo.ch.forEach((ch,c)
 const ts=norm(t).split(/\s+/);let n=0,h='';for(const[b,c,v,x]of idx){if(ts.every(w=>x.includes(w))){n++;if(n<=60)h+=`<div data-b="${b}" data-c="${c}" data-v="${v}"><b>${esc(bk()[b].name)} ${c+1}:${v+1}</b> ${esc(bk()[b].ch[c][v].slice(0,140))}</div>`}}
 return h?(h+(n>60?`<div>${n} coincidencias; se muestran 60.</div>`:'')):'<div>Sin resultados</div>'}
 function search(forceText){const t=$('#q').value.trim();if(!t||!bible){res.style.display='none';return}let h='';
-const nb=bk().map((x,i)=>[i,norm(x.name).replace(/\s+/g,'')]).filter(([i])=>chs(i).length),nt=norm(t).replace(/\s+/g,'');
+const nb=order().map(i=>[i,norm(bk()[i].name).replace(/\s+/g,'')]),nt=norm(t).replace(/\s+/g,'');
 const m=t.match(/^((?:\d\s*)?[^\d:.,]+?)\s*(\d+)(?:\s*[:.,]\s*(\d+))?$/);
 if(!forceText&&m){const n=norm(m[1]).replace(/\s+/g,''),f=nb.find(([i,x])=>x.startsWith(n))||(n.length>2&&nb.find(([i,x])=>x.includes(n)));
 if(f){const b=f[0],c=+m[2]-1,v=m[3]?+m[3]-1:null;if(bk()[b].ch[c]&&(v==null||bk()[b].ch[c][v]))h=`<div data-b="${b}" data-c="${c}" data-v="${v==null?'':v}"><b>Ir a ${esc(bk()[b].name)} ${c+1}${v!=null?':'+(v+1):''}</b></div>`}}
@@ -170,79 +227,80 @@ const ex=ms.find(([i,x])=>x==nt);if(ex)h+=`<div class="chips">${chs(ex[0]).map(c
 h+=`<div data-txt="1">Buscar «${esc(t)}» en todo el texto</div>`}}
 if(!h)h=textSearch(t);res.innerHTML=h;res.style.display='block'}
 res.onclick=e=>{const x=e.target.closest('[data-txt]');if(x){res.innerHTML=textSearch($('#q').value.trim());return}
-const ch=e.target.closest('[data-ch]');if(ch){goTo(+ch.dataset.b,+ch.dataset.ch);res.style.display='none';$('#q').blur();return}
-const d=e.target.closest('[data-b]');if(!d)return;goTo(+d.dataset.b,+d.dataset.c,d.dataset.v===''?null:+d.dataset.v);
+const ch=e.target.closest('[data-ch]');if(ch){jump(+ch.dataset.b,+ch.dataset.ch);res.style.display='none';$('#q').blur();return}
+const d=e.target.closest('[data-b]');if(!d)return;jump(+d.dataset.b,+d.dataset.c,d.dataset.v===''?null:+d.dataset.v);
 if(d.dataset.fill){$('#q').value=bk()[+d.dataset.b].name+' ';search()}else{res.style.display='none';$('#q').blur()}};
+// Conexiones (referencias cruzadas de OpenBible.info)
+const xc={};let xrData=null,xrBk=-1;
+const refLbl=(b,c,v,ec,ev)=>`${bk()[b].name} ${c}:${v}${ec?'-'+(ec!=c?ec+':':'')+ev:''}`;
+async function openXr(){if(!bible)return;const k=bk()[B_].k,box=$('#xr');box.classList.add('on');closePop();$('#set').classList.remove('on');
+$('#xrt').textContent=`Conexiones · ${bk()[B_].name} ${cvc.c+1}`;const L=$('#xrl');
+if(k<0){L.innerHTML='<div class="r"><small>Este libro no tiene referencias cruzadas.</small></div>';$('#xrb1').innerHTML=$('#xrv').innerHTML='';return}
+if(!xc[k]){L.innerHTML='<div class="r"><small>Cargando…</small></div>';try{const r=await fetch('xref/'+k+'.json');if(!r.ok)throw 0;xc[k]=await r.json()}catch(e){L.innerHTML='<div class="r"><small>Las conexiones están disponibles en la app instalada (Android), donde los datos vienen incluidos.</small></div>';return}}
+xrData=xc[k];xrBk=B_;const cd=xrData[cvc.c+1]||{},rows=[];
+Object.keys(cd).map(Number).sort((a,b)=>a-b).forEach(v=>cd[v].forEach(r=>{const tb=kmap[r[0]];if(tb!=null&&bk()[tb].ch[r[1]-1]&&bk()[tb].ch[r[1]-1][r[2]-1])rows.push({v,tb,tc:r[1],tv:r[2],ec:r[3],ev:r[4],w:r[5]})}));
+xrRows=rows;const cnt={};rows.forEach(r=>cnt[r.tb]=(cnt[r.tb]||0)+1);
+$('#xrb1').innerHTML='<option value="">Todos los libros ('+rows.length+')</option>'+Object.keys(cnt).map(Number).sort((a,b)=>cnt[b]-cnt[a]).map(b=>`<option value="${b}">${esc(bk()[b].name)} (${cnt[b]})</option>`).join('');
+const vs=[...new Set(rows.map(r=>r.v))];$('#xrv').innerHTML='<option value="">Todos los versículos</option>'+vs.map(v=>`<option value="${v}">Versículo ${v}</option>`).join('');paintXr()}
+let xrRows=[];
+function paintXr(){const fb=$('#xrb1').value,fv=$('#xrv').value;let r=xrRows.filter(x=>(fb===''||x.tb==+fb)&&(fv===''||x.v==+fv));const n=r.length;r=r.slice(0,200);
+$('#xrl').innerHTML=n?r.map((x,i)=>`<div class="r" data-i="${xrRows.indexOf(x)}"><small>${esc(bk()[xrBk].name)} ${cvc.c+1}:${x.v} →</small><b>${esc(refLbl(x.tb,x.tc,x.tv,x.ec,x.ev))}</b><i>${esc((bk()[x.tb].ch[x.tc-1][x.tv-1]||'').slice(0,110))}</i></div>`).join('')+(n>200?`<div class="r"><small>${n} conexiones; se muestran 200.</small></div>`:''):'<div class="r"><small>Este capítulo no tiene conexiones.</small></div>'}
+$('#xrb1').onchange=$('#xrv').onchange=paintXr;
+$('#xrl').onclick=e=>{const t=e.target.closest('[data-i]');if(!t)return;const x=xrRows[+t.dataset.i];jump(x.tb,x.tc-1,x.tv-1);$('#xr').classList.remove('on')};
+$('#xrb').onclick=e=>{e.stopPropagation();$('#xr').classList.contains('on')?$('#xr').classList.remove('on'):openXr()};$('#xrx').onclick=()=>$('#xr').classList.remove('on');
 // Importar JSON / XML
-const fin=(books,name)=>{books.forEach(b=>b.ch=b.ch.map(c=>c&&Array.from(c,x=>x==null?'':x)));return{id:'u'+Date.now(),name:name.replace(/\.(json|xml)$/i,''),books}};
+const fin=(books,name)=>ensureK({id:'u'+Date.now(),name:name.replace(/\.(json|xml)$/i,''),books:books.map(b=>(b.ch=b.ch.map(c=>c&&Array.from(c,x=>x==null?'':x)),b))});
 function parseXml(txt,name){const d=new DOMParser().parseFromString(txt,'text/xml');if(d.querySelector('parsererror'))throw new Error('XML inválido');let books=[];
 const bb=d.getElementsByTagName('BIBLEBOOK');
 if(bb.length){for(const b of bb){const ch=[];for(const c of b.getElementsByTagName('CHAPTER')){const vs=[];for(const v of c.getElementsByTagName('VERS'))vs[+v.getAttribute('vnumber')-1]=v.textContent.trim();ch[+c.getAttribute('cnumber')-1]=vs}
-books.push({name:b.getAttribute('bname')||SP[+b.getAttribute('bnumber')-1]||'Libro',ch})}}
-else{const m=new Map();for(const v of d.getElementsByTagName('verse')){const id=v.getAttribute('osisID'),tx=v.textContent.trim();if(!id||!tx)continue;const[bn,c,n]=id.split(' ')[0].split('.');if(!m.has(bn))m.set(bn,{name:SP[OS.indexOf(bn)]||bn,ch:[]});const o=m.get(bn);(o.ch[c-1]=o.ch[c-1]||[])[n-1]=tx}books=[...m.values()]}
+const bn=+b.getAttribute('bnumber');books.push({name:b.getAttribute('bname')||SP[bn-1]||'Libro',k:bn>0&&bn<=66?bn-1:undefined,ch})}}
+else{const m=new Map();for(const v of d.getElementsByTagName('verse')){const id=v.getAttribute('osisID'),tx=v.textContent.trim();if(!id||!tx)continue;const[bn,c,n]=id.split(' ')[0].split('.');if(!m.has(bn))m.set(bn,{name:SP[OS.indexOf(bn)]||bn,k:OS.indexOf(bn),ch:[]});const o=m.get(bn);(o.ch[c-1]=o.ch[c-1]||[])[n-1]=tx}books=[...m.values()]}
 if(!books.length)throw new Error('no se encontraron libros (se admite Zefania y OSIS)');return fin(books,name)}
+const parseMk=j=>j.books.map(b=>{const ch=[];(b.chapters||[]).forEach(c=>{const n=parseInt(String(c.usfm||c.chapter_usfm).split('.').pop());if(!(n>0))return;const vs=ch[n-1]=ch[n-1]||[];(c.items||[]).forEach(it=>{if(it.type!=='verse')return;const v=(it.verse_numbers||[])[0];if(!(v>0))return;const x=(it.lines||[]).join(' ').replace(/\s+/g,' ').trim();vs[v-1]=vs[v-1]?vs[v-1]+' '+x:x})});const u=b.usfm||b.book_usfm;return{name:b.human||b.name,k:US.indexOf(u),ch}}).filter(b=>b.ch.some(c=>c&&c.length));
+const parseSm=(j,es)=>j.books.map(b=>{const ch=[];b.chapters.forEach(c=>{ch[c.chapter-1]=[];c.verses.forEach(v=>{ch[c.chapter-1][v.verse-1]=String(v.text||'').trim()})});const k=canonEn(b.name);return{name:es&&k>=0?SP[k]:b.name,k,ch}}).filter(b=>b.ch.some(c=>c&&c.length));
 function parse(txt,name){txt=txt.replace(/^\uFEFF/,'');if(txt.trimStart().startsWith('<'))return parseXml(txt,name);const j=JSON.parse(txt);let books=[];
 if(Array.isArray(j)&&j[0]&&j[0].chapters)books=j.map(x=>({name:x.name||x.abbrev,ch:x.chapters.map(c=>c.map(String))}));
 else if(Array.isArray(j)&&j[0]&&'verse' in j[0]){const m=new Map();j.forEach(r=>{const n=r.book||r.book_name||r.name;if(!m.has(n))m.set(n,{name:String(n),ch:[]});const o=m.get(n);(o.ch[r.chapter-1]=o.ch[r.chapter-1]||[])[r.verse-1]=String(r.text)});books=[...m.values()]}
 else if(j&&j.books&&j.books[0]&&j.books[0].chapters&&j.books[0].chapters[0]&&j.books[0].chapters[0].items)books=parseMk(j);
+else if(j&&j.books&&j.books[0]&&j.books[0].chapters&&j.books[0].chapters[0]&&j.books[0].chapters[0].verses)books=parseSm(j,false);
 else throw new Error('formato no reconocido');return fin(books,name)}
 function addBible(b){bibles=bibles.filter(x=>x.id!=b.id);bibles.push(b);save(b);fillVs();useBible(bibles.length-1)}
 $('#imp').onclick=$('#e2').onclick=()=>$('#file').click();
 $('#file').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{addBible(parse(await f.text(),f.name));$('#set').classList.remove('on')}
 catch(x){alert('No se pudo importar ('+x.message+').\nFormatos: JSON [{name, chapters:[[versículos]]}] o [{book, chapter, verse, text}], XML Zefania u OSIS.')}e.target.value=''};
-// Descargar por internet: helloao.org, TheBibleAPI, wldeh y mrk214 (GitHub). Primero idioma, luego traducciones de ese idioma
-const TB_URL='https://thebibleapi.netlify.app/.netlify/functions',WL='https://cdn.jsdelivr.net/gh/wldeh/bible-api/bibles',MK='https://mrk214.github.io/snapshots/';
-const TBL='kjv|en|King James Version;web|en|World English Bible;asv|en|American Standard Version;bbe|en|Bible in Basic English;darby|en|Darby Bible;dra|en|Douay-Rheims;ylt|en|Youngs Literal Translation;oeb-us|en|Open English Bible (US);oeb-cw|en|Open English Bible (Commonwealth);webbe|en|World English Bible (British);bkr|cs|Bible kralická;luther1912|de|Luther Bible 1912;ostervald|fr|French Ostervald;riveduta|it|Riveduta Bible;almeida|pt|João Ferreira de Almeida;rv1909|es|Reina-Valera 1909;rccv|ro|Romanian Cornilescu;synodal|ru|Russian Synodal;albanian|sq|Albanian Bible;bulgarian|bg|Bulgarian Bible;croatian|hr|Croatian Bible;danish|da|Danish Bible;statenvertaling|nl|Statenvertaling;finnish|fi|Finnish Bible;karoli|hu|Károli Bible;latvian|lv|Latvian Bible;norwegian|no|Norwegian Bible;gdanska|pl|Biblia Gdańska;swedish|sv|Swedish Bible;clementine|la|Clementine Vulgate;cadman|cy|Cadman Bible;cuv|zh|Chinese Union Version;cuv-simp|zh|Chinese Union Version (Simplified);kougo|ja|Kougo-yaku;korean|ko|Korean Bible;thai|th|Thai Bible;tagalog|tl|Tagalog Bible;turkish|tr|Turkish Bible;cherokee|chr|Cherokee New Testament;maori|mi|Maori Bible;swahili|sw|Swahili Bible';
+// Descargar por internet (solo fuentes verificadas en GitHub). Primero idioma, luego traducciones de ese idioma
+const SM='https://raw.githubusercontent.com/scrollmapper/bible_databases/master/formats/json/',MK='https://raw.githubusercontent.com/mrk214/snapshots/main/';
+const SML='ACV|en|A Conservative Version|8;AKJV|en|American King James Version|8;ASV|en|American Standard Version (1901)|8;Alb|sq|Albanian Bible|9;BBE|en|1949/1964 Bible in Basic English|8;BSB|en|Berean Standard Bible|8;BurJudson|my|1835 Judson Burmese Bible|16;CebPinadayag|ceb|Cebuano Pinadayag|9;ChiUnL|lzh|聖經 (文理和合)|7;CroSaric|hr|Hrvatska Biblija Ivana Šarića|9;CzeBKR|cs|Czech Bible Kralicka|8;CzeCSP|cs|Czech Český studijní překlad|8;DaOT1871NT1907|da|Danish OT1871 + NT1907 with original orthography|8;Darby|en|Darby Bible (1889)|8;Esperanto|eo|Esperanto Londona Biblio|8;FinSTLK2017|fi|Pyhä Raamattu (STLK 2017)|8;FreBBB|fr|French Bible Bovet Bonnet (1900)|8;FreBDM1744|fr|Bible David Martin (1744)|9;FreCrampon|fr|La Bible Augustin Crampon 1923|10;FreJND|fr|Bible J.N. Darby in French with Strong\'s numbers|9;FrePGR|fr|Bible Perret-Gentil et Rilliet|9;Geneva1599|en|Geneva Bible (1599)|8;GerBoLut|de|Deutsch Bolsingerߴs Luther 1545 Bibel (moderne Rechtschreibung)|8;GerElb1871|de|German Elberfelder (1871) (sogenannt)|8;GerElb1905|de|German Darby Unrevidierte Elberfelder (1905)|9;GerGruenewald|de|1924 Grünewaldbibel|8;GerMenge|de|Menge-Bibel (1939)|10;GerSch|de|Schlachter Bibel (1951)|8;GerTextbibel|de|Deutsch Textbibel (1906)|9;GerZurcher|de|Deutsche Zürcher Bibel von 1931.|9;GreVamvas|el|Neophytos Vamvas\'s translation of the Holy Bible into modern Greek (1850)|12;Haitian|ht|Haitian Creole Bible|9;HebModern|he|Modern Hebrew Bible|8;HunKar|hu|Revideált Károli Biblia 1908|8;JapBungo|ja|明治元訳「舊約聖書」(1953年版) 大正改訳「新約聖書|8;Jubilee2000|en|English Jubilee 2000 Bible|8;KJV|en|King James Version (1769) with Strongs Numbers and Morphology and CatchWords|8;KJVA|en|King James Version (1769) with Strongs Numbers and Morphology and CatchWords, including Apocrypha (without glosses)|10;KJVPCE|en|King James Version: Pure Cambridge Edition|8;KLV|tlh|Klingon Language Version of the World English Bible|9;KorHKJV|ko|Hangul King James Version|9;KorRV|ko|개역성경|9;LEB|en|The Lexham English Bible|8;LITV|en|Green\'s Literal Translation|8;LvGluck8|lv|Latvian Glück 8th edition|8;MKJV|en|Green\'s Modern King James Version|8;Mal1910|ml|Sathyavedapusthakam (Malayalam Bible)|15;Maori|mi|Maori Bible|9;Mg1865|mg|Baiboly Malagasy (1865)|9;NHEB|en|New Heart English Bible|8;NHEBJE|en|New Heart English Bible: Jehovah Edition|8;NHEBME|en|New Heart English Bible: Messianic Edition|8;NorSMB|nn|Studentmållagsbibelen frå 1921|8;Norsk|nb|Bibelen på Norsk (1930)|8;PolGdanska|pl|Polish Biblia Gdanska (1881)|8;PolUGdanska|pl|Updated Gdańsk Bible|8;PorBLivre|pt|Bíblia Livre|8;PorBLivreTR|pt|Bíblia Livre - Textus Receptus|8;PorNVA|pt|Bíblia Nova Versão de Acesso Livre|8;RLT|en|Revised Literal Translation (2018) of the King James Version with Strongs Numbers and Morphology|8;RNKJV|en|Restored Name King James Version|8;RWebster|en|Revised Webster Version (1833)|8;Rotherham|en|The Emphasised Bible by J. B. Rotherham|9;RusSynodal|ru|Синодального Перевода Библии|12;SloChraska|sl|A Conservative Version|8;SloKJV|sl|Slovenian translation of Holy Bible King James Version (1769)|8;SpaRV|es|La Santa Biblia Reina-Valera (1909)|8;SpaRV1865|es|La Santa Biblia Reina-Valera (1865) con arreglos ortográficos|8;SrKDEkavski|sr|Serbian Bible Daničić-Karadžić Ekavski|10;SrKDIjekav|sr|Serbian Bible Daničić-Karadžić Ijekavski|10;SweKarlXII1873|sv|Svenska Karl XII:s Bibel (1873)|8;TagAngBiblia|tl|Philippine Bible Society (1905)|9;ThaiKJV|th|Thai King James Version|15;TpiKJPB|tpi|King Jems Pisin Baibel|10;UKJV|en|Updated King James Version|8;Viet|vi|Kinh Thánh Tiếng Việt (1934)|9;Vulgate|la|Latin Vulgate|9;Webster|en|Webster Bible|8;YLT|en|Young\'s Literal Translation (1898)|8';
 const MKL='es___spa___spa/DHH94I_vid_52.json|Biblia Dios Habla Hoy;es___spa___spa/DHHS94_vid_1846.json|Dios habla Hoy Estándar;es___spa___spa/LBLA_vid_89.json|La Biblia de las Américas;es___spa___spa/NBLA_vid_103.json|Nueva Biblia de las Américas;es___spa___spa/NTV_vid_127.json|Nueva Traducción Viviente;es___spa___spa/NVI_vid_128.json|Nueva Versión Internacional;es___spa___spa/RVA2015_vid_1782.json|Reina Valera Actualizada;es___spa___spa/RVC_vid_146.json|Reina Valera Contemporánea;es___spa___spa/RVR1960_vid_149.json|Reina Valera 1960;es___spa___spa/TLAI_vid_178.json|Traducción en Lenguaje Actual Interconfesional;es___spa___spa/TLA_vid_176.json|Traducción en Lenguaje Actual;es___spa___spa_es/NVI_vid_1637.json|Nueva Versión Internacional (Castellano)';
-const EN='Genesis,Exodus,Leviticus,Numbers,Deuteronomy,Joshua,Judges,Ruth,1 Samuel,2 Samuel,1 Kings,2 Kings,1 Chronicles,2 Chronicles,Ezra,Nehemiah,Esther,Job,Psalms,Proverbs,Ecclesiastes,Song of Solomon,Isaiah,Jeremiah,Lamentations,Ezekiel,Daniel,Hosea,Joel,Amos,Obadiah,Jonah,Micah,Nahum,Habakkuk,Zephaniah,Haggai,Zechariah,Malachi,Matthew,Mark,Luke,John,Acts,Romans,1 Corinthians,2 Corinthians,Galatians,Ephesians,Philippians,Colossians,1 Thessalonians,2 Thessalonians,1 Timothy,2 Timothy,Titus,Philemon,Hebrews,James,1 Peter,2 Peter,1 John,2 John,3 John,Jude,Revelation'.split(',');
-const CC=[50,40,27,36,34,24,21,4,31,24,22,25,29,36,10,13,10,42,150,31,12,8,66,52,5,48,12,14,3,9,1,4,7,3,3,3,2,14,4,28,16,24,21,28,16,16,13,6,6,4,4,5,3,6,4,3,1,13,5,5,3,5,1,1,1,22];
-const SRC={ao:'helloao.org',tb:'TheBibleAPI',wl:'GitHub (wldeh)',mk:'GitHub (mrk214)'};
-let all=[],loaded=0;const mm=$('#mm'),pr=$('#pr');
+const SRC={sm:'GitHub scrollmapper',mk:'GitHub mrk214'};
 const dn=(()=>{try{return new Intl.DisplayNames(['es'],{type:'language'})}catch(e){return null}})();
 const lname=c=>{c=String(c||'').split('-')[0].toLowerCase();try{const n=dn&&dn.of(c);if(n&&n!==c)return n[0].toUpperCase()+n.slice(1)}catch(e){}return c||'?'};
-const jf=async u=>{const r=await fetch(u);if(!r.ok)throw new Error('HTTP '+r.status);return r.json()};
+const all=[...SML.split(';').map(s=>{const[a,l,n,m]=s.split('|');return{src:'sm',id:a,name:n,lang:lname(l),code:l,mb:m}}),...MKL.split(';').map(s=>{const[p,n]=s.split('|');return{src:'mk',id:p,name:n,lang:lname('es'),code:'es',mb:7}})];
+const mm=$('#mm'),pr=$('#pr');
 const msg=(s,bad)=>{mm.textContent=s;mm.style.color=bad?'#c0392b':'var(--mut)'};
-async function openApi(){$('#mdl').classList.add('on');$('#set').classList.remove('on');if(loaded)return;msg('Cargando fuentes…');
-const r=await Promise.allSettled([
-jf(API+'/api/available_translations.json').then(j=>j.translations.map(t=>({src:'ao',id:t.id,name:t.name,lang:lname(t.language),lic:t.licenseUrl}))),
-Promise.resolve(TBL.split(';').map(s=>{const[i,l,n]=s.split('|');return{src:'tb',id:i,name:n,lang:lname(l)}})),
-jf(WL+'/bibles.json').then(j=>(Array.isArray(j)?j:j.bibles||[]).map(x=>{const id=x.id||x.version_id||x.abbreviation;return id&&{src:'wl',id,name:x.name||x.version||x.title||id,lang:lname(x.languageCode||String(id).split('-')[0])}}).filter(Boolean)),
-Promise.resolve(MKL.split(';').map(s=>{const[i,n]=s.split('|');return{src:'mk',id:i,name:n,lang:lname('es'),lic:'https://github.com/mrk214/bible-data-es-spa'}}))]);
-if(r[0].status!='fulfilled'&&r[2].status!='fulfilled'){msg('No se pudo conectar con las fuentes. Si ves esta página dentro de claude.ai, el navegador bloquea las conexiones externas; esta función sí funciona en la app instalada o en tu propio servidor.',1);return}
-all=r.flatMap(x=>x.status=='fulfilled'?x.value:[]);loaded=1;langs();msg(r.some(x=>x.status!='fulfilled')?'Una de las fuentes no respondió; se muestran las demás.':'')}
-function langs(){const f=norm($('#lf').value),cur=$('#lsel').value,s=[...new Set(all.map(t=>t.lang))].filter(n=>norm(n).includes(f)).sort((a,b)=>a.localeCompare(b,'es'));
-$('#lsel').innerHTML='<option value="">Elige un idioma…</option>'+s.map(n=>`<option>${esc(n)}</option>`).join('');$('#lsel').value=cur}
-function tlist(){const k=$('#lsel').value,L=$('#tlist');if(!k||!loaded){L.innerHTML='<small>Primero elige un idioma.</small>';return}
-L.innerHTML=all.filter(t=>t.lang==k).sort((a,b)=>a.name.localeCompare(b.name)).map(t=>`<div class="fl"><span style="flex:1">${esc(t.name)} <small>· ${SRC[t.src]}${t.lic?' · <a href="'+esc(t.lic)+'" target="_blank" rel="noopener">licencia</a>':''}</small></span><button data-i="${all.indexOf(t)}">Descargar</button></div>`).join('')}
+function langs(){const f=norm($('#lf').value),cu=$('#lsel').value,s=[...new Set(all.map(t=>t.lang))].filter(n=>norm(n).includes(f)).sort((a,b)=>a.localeCompare(b,'es'));
+$('#lsel').innerHTML='<option value="">Elige un idioma…</option>'+s.map(n=>`<option>${esc(n)}</option>`).join('');$('#lsel').value=cu}
+function tlist(){const k=$('#lsel').value,L=$('#tlist');if(!k){L.innerHTML='<small>Primero elige un idioma.</small>';return}
+L.innerHTML=all.filter(t=>t.lang==k).sort((a,b)=>a.name.localeCompare(b.name)).map(t=>`<div class="fl"><span style="flex:1;text-align:left">${esc(t.name)} <small>· ${SRC[t.src]} · ~${t.mb} MB</small></span><button data-i="${all.indexOf(t)}">Descargar</button></div>`).join('')}
+function openApi(){$('#mdl').classList.add('on');$('#set').classList.remove('on');msg('');langs()}
 $('#api').onclick=$('#e1').onclick=openApi;$('#mx').onclick=()=>$('#mdl').classList.remove('on');
-$('#lf').oninput=()=>loaded&&langs();$('#lsel').onchange=tlist;
+$('#lf').oninput=langs;$('#lsel').onchange=tlist;
 $('#tlist').onclick=e=>{const b=e.target.closest('button');if(b)dl(all[+b.dataset.i])};
-const verses=d=>{const o=[];for(const it of(d.chapter&&d.chapter.content)||[])if(it.type==='verse')o[it.number-1]=(it.content||[]).map(x=>typeof x==='string'?x:(x&&x.text)||'').join('').replace(/\s+/g,' ').trim();return o};
-const parseMk=j=>j.books.map(b=>{const ch=[];(b.chapters||[]).forEach(c=>{const n=parseInt(String(c.chapter_usfm).split('.').pop());if(!(n>0))return;const vs=ch[n-1]=ch[n-1]||[];(c.items||[]).forEach(it=>{if(it.type!=='verse')return;const v=(it.verse_numbers||[])[0];if(!(v>0))return;const x=(it.lines||[]).join(' ').replace(/\s+/g,' ').trim();vs[v-1]=vs[v-1]?vs[v-1]+' '+x:x})});return{name:b.name,ch}});
-const slugs=n=>{const l=n.toLowerCase(),a=[l.replace(/ /g,''),l.replace(/ /g,'-')];if(n=='Song of Solomon')a.push('song-of-songs','songofsongs','songs');return[...new Set(a)]};
-async function plan(t){
-if(t.src=='ao'){const bs=(await jf(`${API}/api/${t.id}/books.json`)).books;return{names:bs.map(b=>b.commonName||b.name),counts:bs.map(b=>b.numberOfChapters),get:async(i,c)=>verses(await jf(`${API}/api/${t.id}/${bs[i].id}/${c}.json`))}}
-if(t.src=='tb'){const bs=(await jf(`${TB_URL}/getBooks?translation=${t.id}`)).books,es=t.lang=='Español'&&bs.length==66;return{names:bs.map((b,i)=>es?SP[i]:b.name),counts:bs.map(b=>b.chapters),get:async(i,c)=>(await jf(`${TB_URL}/getChapter?book=${encodeURIComponent(bs[i].name)}&chapter=${c}&translation=${t.id}`)).verses}}
-const es=t.lang=='Español',sl={};
-return{names:EN.map((n,i)=>es?SP[i]:n),counts:CC,get:async(i,c)=>{for(const s of(sl[i]?[sl[i]]:slugs(EN[i]))){try{const r=await fetch(`${WL}/${t.id}/books/${s}/chapters/${c}.json`);if(r.ok){sl[i]=s;const j=await r.json(),a=j.data||j.verses||j,o=[];(Array.isArray(a)?a:[]).forEach(v=>o[+v.verse-1]=String(v.text));return o}}catch(e){}}throw 0}}}
-const btns=d=>document.querySelectorAll('#tlist button').forEach(b=>b.disabled=d);
-async function dl(t){if(!t)return;btns(1);pr.hidden=false;pr.removeAttribute('value');msg('Preparando…');
-try{
-if(t.src=='mk'){msg('Descargando… (un solo archivo, puede tardar)');const nb=fin(parseMk(await jf(MK+t.id)).filter(b=>b.ch.some(c=>c&&c.length)),t.name);if(!nb.books.length)throw new Error('archivo vacío');nb.id='mk-'+t.id;addBible(nb);msg('');$('#mdl').classList.remove('on')}
-else{const P=await plan(t),books=P.names.map(n=>({name:n,ch:[]})),jobs=[];P.counts.forEach((n,i)=>{for(let c=1;c<=n;c++)jobs.push([i,c])});
-const total=jobs.length,dead=new Set();let done=0,ok=0;pr.max=total;
-const worker=async()=>{while(jobs.length){const[i,c]=jobs.shift();if(!dead.has(i)){let v=null;for(let a=0;a<2&&!(v&&v.length);a++){try{v=await P.get(i,c)}catch(e){}}
-if(v&&v.length){books[i].ch[c-1]=Array.from(v,x=>x==null?'':String(x).replace(/^¶\s*/,'').trim());ok++}else if(c==1)dead.add(i)}pr.value=++done;msg(`Descargando… ${Math.round(done/total*100)}%`)}};
-await Promise.all(Array.from({length:6},worker));
-if(ok<total*.05)throw new Error('no se recibieron datos');
-const nb=fin(books.filter(b=>b.ch.some(c=>c&&c.length)),t.name);nb.id=t.src+'-'+t.id;addBible(nb);msg('');$('#mdl').classList.remove('on')}}
-catch(e){msg('Error al descargar ('+(e.message||'sin conexión')+'). Revisa tu internet o prueba otra fuente.',1)}
-pr.hidden=true;btns(0)}
+async function getJson(url){const r=await fetch(url);if(!r.ok)throw new Error('HTTP '+r.status);const tot=+r.headers.get('content-length')||0;if(!r.body||!r.body.getReader||!tot)return r.json();
+const rd=r.body.getReader(),parts=[];let got=0;pr.max=tot;for(;;){const{done,value}=await rd.read();if(done)break;parts.push(value);got+=value.length;pr.value=got;msg(`Descargando… ${Math.round(got/tot*100)}%`)}
+msg('Procesando…');return JSON.parse(await new Blob(parts).text())}
+async function dl(t){if(!t)return;document.querySelectorAll('#tlist button').forEach(b=>b.disabled=true);pr.hidden=false;pr.removeAttribute('value');msg('Descargando…');
+try{const j=await getJson(t.src=='mk'?MK+t.id:SM+t.id+'.json');
+const books=t.src=='mk'?parseMk(j):parseSm(j,t.code=='es');if(!books.length)throw new Error('el archivo no trae texto');
+const nb=fin(books,t.name);nb.id=t.src+'-'+t.id;addBible(nb);msg('');$('#mdl').classList.remove('on')}
+catch(e){msg('Error: '+(e.message||'sin conexión')+'. Revisa tu internet e inténtalo de nuevo.',1)}
+pr.hidden=true;document.querySelectorAll('#tlist button').forEach(b=>b.disabled=false)}
 // Almacenamiento (IndexedDB)
 const db=new Promise(r=>{try{const q=indexedDB.open('biblias',1);q.onupgradeneeded=()=>q.result.createObjectStore('b',{keyPath:'id'});q.onsuccess=()=>r(q.result);q.onerror=()=>r(null)}catch(e){r(null)}});
 async function save(b){try{const d=await db;if(d)d.transaction('b','readwrite').objectStore('b').put(b)}catch(e){}}
+async function delDb(id){try{const d=await db;if(d)d.transaction('b','readwrite').objectStore('b').delete(id)}catch(e){}}
 async function loadAll(){try{const d=await db;if(!d)return[];return await new Promise(r=>{const q=d.transaction('b').objectStore('b').getAll();q.onsuccess=()=>r(q.result);q.onerror=()=>r([])})}catch(e){return[]}}
-(async()=>{setTheme(st('th')=='dark'?'dark':'light');await setFont(st('fnt')||'EB Garamond');zv();bibles=await loadAll();fillVs();
+(async()=>{setTheme(st('th')=='dark'?'dark':'light');setAlign(ta);setOrd(ord);fillFonts();await setFont(st('fnt')||'EB Garamond');zv();bibles=(await loadAll()).filter(b=>b&&b.books&&b.books.length);fillVs();
 if(!bibles.length){$('#empty').style.display='flex';return}
 const li=bibles.findIndex(b=>b.id==st('last'));useBible(li>=0?li:bibles.length-1)})();
 </script></body></html>

@@ -1,6 +1,5 @@
 {
   "appId": "com.mibiblia.app",
   "appName": "Mi Biblia",
-  "webDir": "www",
-  "plugins": { "CapacitorHttp": { "enabled": true } }
+  "webDir": "www"
 }
