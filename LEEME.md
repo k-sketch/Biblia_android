@@ -23,3 +23,8 @@ Hace falta un APK/AAB firmado (Build > Generate Signed Bundle) y una cuenta de d
 ## Datos incluidos
 - `www/xref/`: referencias cruzadas de OpenBible.info (CC BY 4.0), tomadas de trekhleb/bible-cross-references. Alimentan la pestaña "Conexiones" (boton con el simbolo de enlace).
 - Las Biblias se descargan desde GitHub (scrollmapper/bible_databases, mrk214/bible-data-es-spa y seven1m/open-bibles) o desde HelloAO (bible.helloao.org) o se importan desde un archivo.
+
+## Componentes de terceros
+- Iconos: Iconoir (MIT) - https://github.com/iconoir-icons/iconoir
+- Giro de pagina: StPageFlip / page-flip (MIT) - www/lib/page-flip.browser.js
+- Orientacion: en telefonos la app queda fija en vertical (MainActivity.java); en tablets gira libremente.
