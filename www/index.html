@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="es"><head><meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no, interactive-widget=resizes-visual">
 <title>Mi Biblia</title>
 <link rel="stylesheet" href="fonts.css">
 <style>
@@ -94,8 +94,15 @@ svg.ic{width:18px;height:18px}
 .fl>label{flex:0 0 66px}
 #nbp{bottom:calc(var(--bb) + var(--sb) + 16px);left:50%;transform:translateX(-50%);height:38px;padding:0 16px;align-items:center;gap:8px;cursor:pointer;color:var(--fg);font-size:14px;z-index:7}
 .fb-root{touch-action:none!important;background:transparent}
+
+#topbar{width:80px;padding:3px;transition:width .24s ease;overflow:hidden;box-sizing:border-box;justify-content:space-between}
+#topbar.open{width:min(560px,calc(100% - 16px))}
+#topbar>svg.ic{display:none}
+#q{flex:0 0 0;width:0;min-width:0;padding:0;opacity:0;pointer-events:none;transition:opacity .18s}
+#topbar.open #q{flex:1;padding:0 8px;opacity:1;pointer-events:auto}
+#tlist button{min-width:84px}
 </style></head><body class="nob">
-<div id="topbar" class="float"><svg class="ic" viewBox="0 0 24 24" stroke-width="1.5" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M17 17L21 21" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 11C3 15.4183 6.58172 19 11 19C13.213 19 15.2161 18.1015 16.6644 16.6493C18.1077 15.2022 19 13.2053 19 11C19 6.58172 15.4183 3 11 3C6.58172 3 3 6.58172 3 11Z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg><input id="q" type="search" placeholder="Buscar cita bíblica" autocomplete="off"><button id="gear" class="pill ico" title="Ajustes"><svg class="ic" stroke-width="1.5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 15C13.6569 15 15 13.6569 15 12C15 10.3431 13.6569 9 12 9C10.3431 9 9 10.3431 9 12C9 13.6569 10.3431 15 12 15Z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M19.6224 10.3954L18.5247 7.7448L20 6L18 4L16.2647 5.48295L13.5578 4.36974L12.9353 2H10.981L10.3491 4.40113L7.70441 5.51596L6 4L4 6L5.45337 7.78885L4.3725 10.4463L2 11V13L4.40111 13.6555L5.51575 16.2997L4 18L6 20L7.79116 18.5403L10.397 19.6123L11 22H13L13.6045 19.6132L16.2551 18.5155C16.6969 18.8313 18 20 18 20L20 18L18.5159 16.2494L19.6139 13.598L21.9999 12.9772L22 11L19.6224 10.3954Z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
+<div id="topbar" class="float"><button id="sb" class="pill ico" title="Buscar cita bíblica"><svg class="ic" viewBox="0 0 24 24" stroke-width="1.5" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M17 17L21 21" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 11C3 15.4183 6.58172 19 11 19C13.213 19 15.2161 18.1015 16.6644 16.6493C18.1077 15.2022 19 13.2053 19 11C19 6.58172 15.4183 3 11 3C6.58172 3 3 6.58172 3 11Z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></button><input id="q" type="search" placeholder="Buscar cita bíblica" autocomplete="off"><button id="gear" class="pill ico" title="Ajustes"><svg class="ic" stroke-width="1.5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 15C13.6569 15 15 13.6569 15 12C15 10.3431 13.6569 9 12 9C10.3431 9 9 10.3431 9 12C9 13.6569 10.3431 15 12 15Z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M19.6224 10.3954L18.5247 7.7448L20 6L18 4L16.2647 5.48295L13.5578 4.36974L12.9353 2H10.981L10.3491 4.40113L7.70441 5.51596L6 4L4 6L5.45337 7.78885L4.3725 10.4463L2 11V13L4.40111 13.6555L5.51575 16.2997L4 18L6 20L7.79116 18.5403L10.397 19.6123L11 22H13L13.6045 19.6132L16.2551 18.5155C16.6969 18.8313 18 20 18 20L20 18L18.5159 16.2494L19.6139 13.598L21.9999 12.9772L22 11L19.6224 10.3954Z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
 <div id="res"></div>
 <div id="sw"><div id="wrap"></div></div>
 <button id="nbp" class="float" style="display:none"></button>
@@ -1993,9 +2000,9 @@ function rebuild(b,tg,keepZoom){if(!bible)return;const z=keepZoom&&pf?pf.zoom:1;
 if(typeof PDFlipbook=='undefined'){wrap.innerHTML='<p style="padding:20px">No se pudo cargar el visor de páginas.</p>';return}
 sizes();B_=b;T=typeset(b,S);pgs=T.pgs;cinfo=T.cinfo;
 let start=1;if(tg&&tg.c!=null){start=idxOf(tg.c,tg.v);if(start<0)start=1}else if(tg&&tg.last)start=pgs.length-1;else if(tg&&tg.title)start=0;
-installShim(T,S,()=>hlk);
+installShim(T,S,()=>hlShow?hlk:null);
 pf=PDFlipbook.create(wrap,{url:'biblia',startPage:start+1,displayMode:wide?'double':'single',arrows:false,controls:false,pageNumbers:false,padding:0,duration:420,shadow:'none'});
-cur=start;sync();if(tg&&tg.v!=null)hlk=tg.c+'.'+tg.v;zv();bookToast();
+cur=start;sync();if(tg&&tg.hl&&tg.v!=null)setTimeout(()=>blinkHl(tg.c,tg.v),450);zv();bookToast();
 if(z>1.02){const p=pf;wrap.addEventListener('flipbook:ready',()=>p.setZoom(z),{once:true})}}
 wrap.addEventListener('flipbook:pagechange',e=>{cur=e.detail.page-1;sync();bookToast()});
 wrap.addEventListener('flipbook:zoomchange',e=>{$('#zr').style.display=e.detail.zoom>1.02?'':'none'});
@@ -2003,9 +2010,10 @@ let svT=0;
 function sync(){if(!bible||!pgs.length)return;let i=Math.min(cur,pgs.length-1);while(i<pgs.length&&pgs[i].t!='C')i++;if(i>=pgs.length){i=Math.min(cur,pgs.length-1);while(i>=0&&pgs[i].t!='C')i--}const d=pgs[Math.max(i,0)];if(!d||d.t!='C')return;
 cvc={c:d.c,v:d.v};$('#bkb').textContent=bk()[B_].name;$('#chb').textContent=d.c+1;$('#vsb').textContent=d.v+1;
 clearTimeout(svT);const id=bible.id,bi=B_;svT=setTimeout(()=>st('pos_'+id,JSON.stringify({b:bi,c:d.c,v:d.v})),400)}
-function hlv(c,v){hlk=c+'.'+v;if(pf&&pf.refresh)pf.refresh()}
-function goTo(b,c,v){if(!bible||!bk()[b]||!bk()[b].ch[c])return;hlk=v!=null?c+'.'+v:null;if(!pf||b!=B_){rebuild(b,{c,v});return}
-const i=idxOf(c,v);if(i<0){rebuild(b,{c,v});return}pf.refresh();pf.goTo(i+1)}
+let hlShow=false,hlTimer=0;
+function blinkHl(c,v){clearInterval(hlTimer);hlk=c+'.'+v;hlShow=true;let n=0;if(pf)pf.refresh();hlTimer=setInterval(()=>{n++;hlShow=n%2==0;if(pf)pf.refresh();if(n>=7){clearInterval(hlTimer);hlk=null;hlShow=false}},330)}
+function goTo(b,c,v){if(!bible||!bk()[b]||!bk()[b].ch[c])return;clearInterval(hlTimer);hlk=null;hlShow=false;if(!pf||b!=B_){rebuild(b,{c,v,hl:v!=null});return}
+const i=idxOf(c,v);if(i<0){rebuild(b,{c,v,hl:v!=null});return}pf.goTo(i+1);if(v!=null)setTimeout(()=>blinkHl(c,v),550)}
 function jump(b,c,v){hist.push({b:B_,c:cvc.c,v:cvc.v});$('#backb').style.display='';goTo(b,c,v)}
 $('#backb').onclick=()=>{closeAll();const h=hist.pop();if(!hist.length)$('#backb').style.display='none';if(h)goTo(h.b,h.c,h.v)};
 // Al llegar al final o al inicio de un libro aparece un botón para pasar al siguiente o al anterior
@@ -2014,16 +2022,19 @@ if(cp>=n-1&&nbk(B_,1)>=0)d=1;else if(cp<=1&&nbk(B_,-1)>=0)d=-1;
 if(!d){el.style.display='none';return}const nm=esc(bk()[nbk(B_,d)].name);el.dataset.go=d;el.innerHTML=d<0?`<svg class="ic" viewBox="0 0 24 24" stroke-width="1.5" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M21 12L3 12M3 12L11.5 3.5M3 12L11.5 20.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg> ${nm}`:`${nm} <svg class="ic" viewBox="0 0 24 24" stroke-width="1.5" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 12L21 12M21 12L12.5 3.5M21 12L12.5 20.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>`;el.style.display='flex'}
 $('#nbp').onclick=()=>{const d=+$('#nbp').dataset.go,n=nbk(B_,d);if(n>=0)rebuild(n,d<0?{last:1}:{title:1})};
 // Paneles: al abrir uno, los demás pierden el foco
-function closeAll(keep){if(keep!='set')$('#set').classList.remove('on');if(keep!='pop')closePop();if(keep!='xr')$('#xr').classList.remove('on');if(keep!='res'){res.style.display='none';if(document.activeElement===$('#q'))$('#q').blur()}}
+function closeAll(keep){if(keep!='set')$('#set').classList.remove('on');if(keep!='pop')closePop();if(keep!='xr')$('#xr').classList.remove('on');if(keep!='res'){res.style.display='none';if(document.activeElement===$('#q'))$('#q').blur();$('#topbar').classList.remove('open');$('#q').value=''}}
+function openSearch(){closeAll('res');$('#topbar').classList.add('open');setTimeout(()=>$('#q').focus(),30)}
+$('#sb').onclick=e=>{e.stopPropagation();if($('#topbar').classList.contains('open'))closeAll();else openSearch()};
+$('#q').addEventListener('keydown',e=>{if(e.key=='Escape')closeAll()});
 swEl.addEventListener('pointerdown',()=>closeAll());
-document.addEventListener('click',e=>{if(!e.target.closest('#set,#gear,#res,#q,#pop,#botbar,#xr,#mdl'))closeAll()});
+document.addEventListener('click',e=>{if(!e.target.closest('#set,#topbar,#res,#pop,#botbar,#xr,#mdl'))closeAll()});
 async function useBible(i){let b=bibles[i];if(!b)return;if(!b.books){const full=await getBible(b.id);if(!full){bibles.splice(i,1);saveMeta();fillVs();return}b=bibles[i]=full}
 bible=ensureK(b);idx=null;kmap={};bk().forEach((x,j)=>{if(x.k>=0)kmap[x.k]=j});hist=[];$('#backb').style.display='none';$('#vs').value=i;document.body.classList.remove('nob');$('#empty').style.display='none';
 let bi=bk().findIndex((_,k)=>chs(k).length),tg=null;try{const p=JSON.parse(st('pos_'+bible.id));if(p&&bk()[p.b]&&bk()[p.b].ch[p.c]){bi=p.b;tg={c:p.c,v:p.v}}}catch(e){}
 rebuild(bi,tg);st('last',bible.id)}
 function fillVs(){$('#vs').innerHTML=bibles.map((b,i)=>`<option value="${i}">${esc(b.name)}</option>`).join('')}
 let lt;const relayout=force=>{clearTimeout(lt);lt=setTimeout(()=>{if(!bible||!pf)return;wrap.style.opacity=0;setTimeout(()=>{rebuild(B_,{c:cvc.c,v:cvc.v},true);requestAnimationFrame(()=>wrap.style.opacity=1)},170)},force?60:250)};
-addEventListener('resize',()=>{if(swEl.clientWidth+'x'+swEl.clientHeight!=lastSz)relayout()});
+addEventListener('resize',()=>{const ae=document.activeElement;if(ae&&(ae.tagName=='INPUT'||ae.tagName=='SELECT'))return;if(swEl.clientWidth+'x'+swEl.clientHeight!=lastSz)relayout()});
 $('#vs').onchange=e=>useBible(+e.target.value);
 addEventListener('keydown',e=>{if(['INPUT','SELECT'].includes(e.target.tagName)||!pf)return;if(e.key=='ArrowRight')pf.next();if(e.key=='ArrowLeft')pf.prev()});
 // Selectores flotantes (libro / capítulo / versículo) con lista pequeña
@@ -2152,16 +2163,17 @@ $('#api').onclick=$('#e1').onclick=openApi;$('#mx').onclick=()=>$('#mdl').classL
 $('#lf').oninput=langs;
 $('#tlist').onclick=e=>{const b=e.target.closest('button');if(b)dl(all[+b.dataset.i])};
 const jf=async u=>{const r=await fetch(u);if(!r.ok)throw new Error('HTTP '+r.status);return r.json()};
-async function getText(url){const r=await fetch(url);if(!r.ok)throw new Error('HTTP '+r.status);const tot=+r.headers.get('content-length')||0;if(!r.body||!r.body.getReader||!tot)return r.text();
-const rd=r.body.getReader(),parts=[];let got=0;pr.max=tot;for(;;){const{done,value}=await rd.read();if(done)break;parts.push(value);got+=value.length;pr.value=got;msg(`Descargando… ${Math.round(got/tot*100)}%`)}
-msg('Procesando…');return new Blob(parts).text()}
+let pctBtn=null,curEst=0;const pct=t=>{if(pctBtn)pctBtn.textContent=t};
+async function getText(url){const r=await fetch(url);if(!r.ok)throw new Error('HTTP '+r.status);const tot=curEst||(+r.headers.get('content-length')||0);if(!r.body||!r.body.getReader||!tot)return r.text();
+const rd=r.body.getReader(),parts=[];let got=0;pr.max=tot;for(;;){const{done,value}=await rd.read();if(done)break;parts.push(value);got+=value.length;pr.value=Math.min(got,tot);const q=Math.min(99,Math.round(got/tot*100));msg(`Descargando… ${q}%`);pct(q+'%')}
+msg('Procesando…');pct('…');return new Blob(parts).text()}
 const aoVerses=d=>{const o=[];for(const it of(d.chapter&&d.chapter.content)||[])if(it.type==='verse')o[it.number-1]=(it.content||[]).map(x=>typeof x==='string'?x:(x&&x.text)||'').join('').replace(/\s+/g,' ').trim();return o};
 async function dlAo(t){const bs=(await jf(`${AO}/api/${t.id}/books.json`)).books,es=t.code=='es'||t.code=='spa',books=bs.map(b=>{const k=US.indexOf(b.id);return{name:es&&k>=0?SP[k]:(b.commonName||b.name),k,ch:[]}}),jobs=[];
 bs.forEach((b,i)=>{for(let c=1;c<=b.numberOfChapters;c++)jobs.push([i,c])});const total=jobs.length,slug={};let done=0,ok=0;pr.max=total;
 const get=async(i,c)=>{for(const s of(slug[i]?[slug[i]]:[bs[i].id,bs[i].commonName||bs[i].name])){try{const r=await fetch(`${AO}/api/${t.id}/${encodeURIComponent(s)}/${c}.json`);if(r.ok){slug[i]=s;return aoVerses(await r.json())}}catch(e){}}return null};
-const worker=async()=>{while(jobs.length){const[i,c]=jobs.shift();const v=await get(i,c);if(v&&v.length){books[i].ch[c-1]=Array.from(v,x=>x==null?'':x);ok++}pr.value=++done;msg(`Descargando… ${Math.round(done/total*100)}%`)}};
+const worker=async()=>{while(jobs.length){const[i,c]=jobs.shift();const v=await get(i,c);if(v&&v.length){books[i].ch[c-1]=Array.from(v,x=>x==null?'':x);ok++}pr.value=++done;msg(`Descargando… ${Math.round(done/total*100)}%`);pct(Math.round(done/total*100)+'%')}};
 await Promise.all(Array.from({length:8},worker));if(ok<total*.05)throw new Error('HelloAO no devolvió datos');return books.filter(b=>b.ch.some(c=>c&&c.length))}
-async function dl(t){if(!t)return;document.querySelectorAll('#tlist button').forEach(b=>b.disabled=true);pr.hidden=false;pr.removeAttribute('value');msg('Descargando…');
+async function dl(t){if(!t)return;pctBtn=document.querySelector(`#tlist button[data-i="${all.indexOf(t)}"]`);curEst=t.src=='ao'?0:(parseFloat(t.mb)||0)*1e6;document.querySelectorAll('#tlist button').forEach(b=>b.disabled=true);pct('…');pr.hidden=false;pr.removeAttribute('value');msg('Descargando…');
 try{let books;
 if(t.src=='ao')books=await dlAo(t);
 else if(t.src=='ob')books=parseUsfx(await getText(OB+t.id),true);
@@ -2169,7 +2181,7 @@ else{const j=JSON.parse(await getText((t.src=='mk'?MK+t.id:SM+t.id+'.json')));bo
 if(!books.length)throw new Error('el archivo no trae texto');
 const nb=fin(books,t.name.replace(/ \((CC|dominio)[^)]*\)$/,''));nb.id=t.src+'-'+t.id;addBible(nb);msg('');$('#mdl').classList.remove('on')}
 catch(e){msg('Error: '+(e.message||'sin conexión')+'. Revisa tu internet e inténtalo de nuevo.',1)}
-pr.hidden=true;document.querySelectorAll('#tlist button').forEach(b=>b.disabled=false)}
+pr.hidden=true;pct('Descargar');pctBtn=null;curEst=0;document.querySelectorAll('#tlist button').forEach(b=>b.disabled=false)}
 // Almacenamiento: IndexedDB (Biblias) + lista ligera en localStorage (solo se carga la Biblia activa al iniciar)
 const db=new Promise(r=>{try{const q=indexedDB.open('biblias',1);q.onupgradeneeded=()=>q.result.createObjectStore('b',{keyPath:'id'});q.onsuccess=()=>r(q.result);q.onerror=()=>r(null)}catch(e){r(null)}});
 async function save(b){try{const d=await db;if(d)d.transaction('b','readwrite').objectStore('b').put(b)}catch(e){}}
