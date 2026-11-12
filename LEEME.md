@@ -28,3 +28,8 @@ Hace falta un APK/AAB firmado (Build > Generate Signed Bundle) y una cuenta de d
 - Iconos: Iconoir (MIT) - https://github.com/iconoir-icons/iconoir
 - Giro de pagina: PDFlipbook (SympleNZ, MIT) - https://github.com/SympleNZ/PDFlipbook (incluido dentro de www/index.html con ajustes propios)
 - Orientacion: en telefonos la app queda fija en vertical (MainActivity.java); en tablets gira libremente.
+
+## Aviso sobre GitHub Actions
+Si en tu repositorio siguen apareciendo avisos de Node.js 20 o de setup-java v4, es porque el archivo
+`.github/workflows/android.yml` de tu repositorio es el viejo. Reemplazalo por el de esta carpeta
+(usa checkout@v6, setup-node@v6, setup-java@v5 y upload-artifact@v6, que ya corren en Node 24).
